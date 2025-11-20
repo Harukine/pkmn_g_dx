@@ -11,7 +11,6 @@ class PokemonEntry {
   final int baseStamina;
   final bool hasCostumeForms;
   final int? dexNumber;
-  final String? spriteUrl;
   final String? goIconUrl;
   final List<PokemonForm> forms;
 
@@ -25,7 +24,6 @@ class PokemonEntry {
     required this.baseStamina,
     required this.hasCostumeForms,
     required this.dexNumber,
-    required this.spriteUrl,
     required this.goIconUrl,
     required this.forms,
   });
@@ -45,7 +43,6 @@ class PokemonEntry {
       baseStamina: (json['baseStamina'] as num? ?? 0).toInt(),
       hasCostumeForms: json['hasCostumeForms'] as bool? ?? false,
       dexNumber: (json['dexNumber'] as num?)?.toInt(),
-      spriteUrl: json['spriteUrl']?.toString(),
       goIconUrl: json['goIconUrl']?.toString(),
       forms: formsRaw
           .map((e) => PokemonForm.fromJson(e as Map<String, dynamic>))
@@ -64,7 +61,6 @@ class PokemonEntry {
       'baseStamina': baseStamina,
       'hasCostumeForms': hasCostumeForms,
       'dexNumber': dexNumber,
-      'spriteUrl': spriteUrl,
       'goIconUrl': goIconUrl,
       'forms': forms.map((e) => e.toJson()).toList(),
     };
@@ -86,7 +82,6 @@ class PokemonEntry {
     int? baseStamina,
     bool? hasCostumeForms,
     int? dexNumber,
-    String? spriteUrl,
     String? goIconUrl,
     List<PokemonForm>? forms,
   }) {
@@ -100,7 +95,6 @@ class PokemonEntry {
       baseStamina: baseStamina ?? this.baseStamina,
       hasCostumeForms: hasCostumeForms ?? this.hasCostumeForms,
       dexNumber: dexNumber ?? this.dexNumber,
-      spriteUrl: spriteUrl ?? this.spriteUrl,
       goIconUrl: goIconUrl ?? this.goIconUrl,
       forms: forms ?? this.forms,
     );

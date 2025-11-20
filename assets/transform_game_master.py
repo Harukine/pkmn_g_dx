@@ -8,12 +8,6 @@ BASE_URL = "https://raw.githubusercontent.com/PokeMiners/game_masters/master/lat
 GM_URL = f"{BASE_URL}/latest.json"
 TIMESTAMP_URL = f"{BASE_URL}/timestamp.txt"
 
-# PokeAPI official artwork base URL (id = National Dex number)
-SPRITE_BASE_URL = (
-    "https://raw.githubusercontent.com/"
-    "PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/"
-)
-
 # Pokémon GO icons (PokeMiners pogo_assets repo)
 GO_ICON_BASE = (
     "https://raw.githubusercontent.com/"
@@ -27,8 +21,41 @@ DATA_DIR.mkdir(exist_ok=True)
 RAW_GM_PATH = DATA_DIR / "latest_game_master.json"
 STAMP_PATH = DATA_DIR / "gm_timestamp.txt"
 SLIM_PATH = DATA_DIR / "pokemon_go_slim.json"
+ICON_CACHE_PATH = DATA_DIR / "icon_cache.json"
 
-ICON_CACHE: dict[int, str | None] = {}
+def _load_icon_cache() -> dict:
+    if not ICON_CACHE_PATH.exists():
+        return {"base": {}, "form": {}}
+    try:
+        raw = json.loads(ICON_CACHE_PATH.read_text(encoding="utf-8"))
+        base = {int(k): v for k, v in raw.get("base", {}).items()}
+        form = raw.get("form", {})
+        return {"base": base, "form": form}
+    except Exception as exc:
+        print(f"Warning: failed to read icon cache ({exc}), starting fresh.")
+        return {"base": {}, "form": {}}
+
+
+ICON_CACHE = _load_icon_cache()
+ICON_CACHE_DIRTY = False
+
+
+def _persist_icon_cache() -> None:
+    global ICON_CACHE_DIRTY
+    if not ICON_CACHE_DIRTY:
+        return
+    ICON_CACHE_PATH.write_text(
+        json.dumps(
+            {
+                "base": {str(k): v for k, v in ICON_CACHE["base"].items()},
+                "form": ICON_CACHE["form"],
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    ICON_CACHE_DIRTY = False
 
 
 def download_if_new() -> bool:
@@ -175,8 +202,9 @@ SESSION = requests.Session()
 
 def resolve_go_icon_url(dex_number: int, session: requests.Session) -> str | None:
     """Try a few common filename patterns in the 256x256 icon folder."""
-    if dex_number in ICON_CACHE:
-        return ICON_CACHE[dex_number]
+    global ICON_CACHE_DIRTY
+    if dex_number in ICON_CACHE["base"]:
+        return ICON_CACHE["base"][dex_number]
 
     file_id = f"{dex_number:03d}"
 
@@ -192,26 +220,25 @@ def resolve_go_icon_url(dex_number: int, session: requests.Session) -> str | Non
         try:
             resp = session.head(url, timeout=2)
             if resp.status_code == 200:
-                ICON_CACHE[dex_number] = url
+                ICON_CACHE["base"][dex_number] = url
+                ICON_CACHE_DIRTY = True
                 return url
         except Exception:
             continue
 
-    ICON_CACHE[dex_number] = None
+    ICON_CACHE["base"][dex_number] = None
+    ICON_CACHE_DIRTY = True
     return None
 
 
 def resolve_form_icon_url(dex_number: int, form_id: str, session: requests.Session, base_name: str | None = None) -> str | None:
     """Try to find a Form/Costume icon in the Addressable Assets folder."""
     # form_id comes in as "MEGA_X", "PRIMAL", "COSTUME_2020", "ALOLA", "RATTATA_ALOLA" etc.
-    
-    cache_key = (dex_number, form_id)
-    
-    if not hasattr(resolve_form_icon_url, 'cache'):
-        resolve_form_icon_url.cache = {}
-    
-    if cache_key in resolve_form_icon_url.cache:
-        return resolve_form_icon_url.cache[cache_key]
+    global ICON_CACHE_DIRTY
+    cache_key = f"{dex_number}:{form_id.upper()}"
+
+    if cache_key in ICON_CACHE["form"]:
+        return ICON_CACHE["form"][cache_key]
     
     candidates = []
     
@@ -237,12 +264,14 @@ def resolve_form_icon_url(dex_number: int, form_id: str, session: requests.Sessi
         try:
             resp = session.head(url, timeout=2)
             if resp.status_code == 200:
-                resolve_form_icon_url.cache[cache_key] = url
+                ICON_CACHE["form"][cache_key] = url
+                ICON_CACHE_DIRTY = True
                 return url
         except Exception:
             pass
     
-    resolve_form_icon_url.cache[cache_key] = None
+    ICON_CACHE["form"][cache_key] = None
+    ICON_CACHE_DIRTY = True
     return None
 
 
@@ -287,11 +316,9 @@ def transform_game_master(gm_data: list[dict]) -> list[dict]:
             if match:
                 dex_number = int(match.group(1))
 
-        sprite_url = None
         go_icon_url = None
 
         if isinstance(dex_number, int) and dex_number > 0:
-            sprite_url = f"{SPRITE_BASE_URL}{dex_number}.png"
             go_icon_url = resolve_go_icon_url(dex_number, session)
 
         base_id, suffix_form_id = split_base_and_form(pokemon_id_raw)
@@ -329,7 +356,6 @@ def transform_game_master(gm_data: list[dict]) -> list[dict]:
             "baseStamina": base_stamina,
             "types": types,
             "dexNumber": dex_number,
-            "spriteUrl": sprite_url,
             "goIconUrl": go_icon_url,
         }
 
@@ -393,7 +419,6 @@ def transform_game_master(gm_data: list[dict]) -> list[dict]:
                     "baseStamina": evo_stats.get("baseStamina"),
                     "types": evo_types,
                     "dexNumber": dex_number,
-                    "spriteUrl": sprite_url,
                     "goIconUrl": evo_icon_url,
                 }
 
@@ -438,7 +463,6 @@ def transform_game_master(gm_data: list[dict]) -> list[dict]:
             default = forms[0]
 
         has_costume = any(f["isCostume"] for f in forms)
-        default_sprite = default.get("spriteUrl")
         default_go_icon = default.get("goIconUrl")
         default_dex = default.get("dexNumber")
 
@@ -451,7 +475,6 @@ def transform_game_master(gm_data: list[dict]) -> list[dict]:
             "baseStamina": default["baseStamina"],
             "types": default["types"],
             "dexNumber": default_dex,
-            "spriteUrl": default_sprite,
             "goIconUrl": default_go_icon,
             "hasCostumeForms": has_costume,
             "forms": forms,
@@ -477,6 +500,7 @@ def main():
         encoding="utf-8",
     )
     print(f"Wrote slim Pokémon data to {SLIM_PATH.resolve()}")
+    _persist_icon_cache()
 
 
 if __name__ == "__main__":

@@ -23,7 +23,6 @@ class PokemonHeader extends StatelessWidget {
       children: [
         PokemonIcon(
           goIconUrl: selectedForm.goIconUrl,
-          spriteUrl: selectedForm.spriteUrl,
           size: UIConstants.iconSizeDetailHeader,
           borderRadius: UIConstants.borderRadiusHeader,
         ),

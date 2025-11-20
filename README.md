@@ -8,7 +8,7 @@ information in a clean Flutter UI, so you can browse the entire roster anywhere.
 - 📋 Full species coverage with canonical Pokédex order
 - 🔍 Sorting by name or Dex number, with instant navigation to detail pages
 - 🧬 Rich form support (regional, costumed, shadow, mega, primal, etc.)
-- 🎨 Consistent theming and responsive layouts across mobile/desktop platforms
+- 🎨 Consistent theming with Pokémon GO iconography from PokeMiners assets
 - 📦 Single JSON payload means no runtime API dependency
 
 ## Data Pipeline
@@ -17,7 +17,9 @@ information in a clean Flutter UI, so you can browse the entire roster anywhere.
    simplified structures found under `data/`.
 3. The Flutter app consumes `data/pokemon_go_slim.json` (referenced via
    `AppConstants.pokemonDataPath`) to build models such as `PokemonEntry` and
-   `PokemonForm`.
+   `PokemonForm`, relying exclusively on `pogo_assets` icons for imagery.
+4. Icon lookups cache their resolved URLs in `data/icon_cache.json`, so repeat transforms
+   skip redundant HTTP HEAD calls (delete the file to force a full refresh).
 
 > Tip: rerun the transform script whenever Niantic updates move stats, forms, or
 > adds new species so your local Pokédex stays current.

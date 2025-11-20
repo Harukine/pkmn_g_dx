@@ -5,7 +5,6 @@ import '../../core/constants/ui_constants.dart';
 /// Reusable Pokemon icon widget that handles image loading and fallback
 class PokemonIcon extends StatelessWidget {
   final String? goIconUrl;
-  final String? spriteUrl;
   final double size;
   final double borderRadius;
   final BoxFit fit;
@@ -13,7 +12,6 @@ class PokemonIcon extends StatelessWidget {
   const PokemonIcon({
     super.key,
     this.goIconUrl,
-    this.spriteUrl,
     this.size = UIConstants.iconSizeList,
     this.borderRadius = UIConstants.borderRadiusIcon,
     this.fit = BoxFit.contain,
@@ -21,10 +19,7 @@ class PokemonIcon extends StatelessWidget {
 
   @override
  Widget build(BuildContext context) {
-    // Prefer GO icon, fall back to sprite
-    final url = (goIconUrl != null && goIconUrl!.isNotEmpty)
-        ? goIconUrl
-        : spriteUrl;
+    final url = goIconUrl;
 
     if (url == null || url.isEmpty) {
       return Icon(
