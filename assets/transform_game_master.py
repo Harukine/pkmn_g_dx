@@ -121,6 +121,56 @@ def is_costume_form(pokemon_id: str, form_id: str | None, form_name: str) -> boo
     return False
 
 
+def determine_form_type(
+    pokemon_id: str,
+    form_id: str | None,
+    form_name: str,
+    is_temp_evo: bool = False,
+    temp_evo_type: str | None = None
+) -> str:
+    """
+    Determine form type based on Game Master structure.
+    
+    Returns one of: normal, regional, mega, primal, shadow, purified, costume, special
+    """
+    
+    # Temporary evolutions (most reliable - from Game Master structure)
+    if is_temp_evo and temp_evo_type:
+        temp_upper = temp_evo_type.upper()
+        if "MEGA" in temp_upper:
+            return "mega"
+        if "PRIMAL" in temp_upper:
+            return "primal"
+    
+    # Check form_id for specific patterns
+    if form_id:
+        form_upper = form_id.upper()
+        
+        # Regional forms
+        regional_keywords = ["ALOLA", "ALOLAN", "GALARIAN", "GALAR", "HISUIAN", "HISUI", "PALDEAN", "PALDEA"]
+        if any(region in form_upper for region in regional_keywords):
+            return "regional"
+        
+        # Shadow/Purified
+        if "SHADOW" in form_upper:
+            return "shadow"
+        if "PURIFIED" in form_upper:
+            return "purified"
+        
+        # Special forms (Clone, Armored, etc.)
+        special_keywords = ["CLONE", "ARMORED", "COPY"]
+        if any(special in form_upper for special in special_keywords):
+            return "special"
+    
+    # Costume forms (keyword-based detection)
+    if is_costume_form(pokemon_id, form_id, form_name):
+        return "costume"
+    
+    # Default to normal
+    return "normal"
+
+
+
 SESSION = requests.Session()
 
 def resolve_go_icon_url(dex_number: int, session: requests.Session) -> str | None:
@@ -266,11 +316,13 @@ def transform_game_master(gm_data: list[dict]) -> list[dict]:
 
         pokemon_id_str = str(pokemon_id_raw)
         is_costume = is_costume_form(pokemon_id_str, form_id, form_name)
+        form_type = determine_form_type(pokemon_id_str, form_id, form_name)
 
         variant = {
             "pokemonId": pokemon_id_str,
             "formId": form_id,
             "formName": form_name,
+            "formType": form_type,
             "isCostume": is_costume,
             "baseAttack": base_attack,
             "baseDefense": base_defense,
@@ -321,10 +373,20 @@ def transform_game_master(gm_data: list[dict]) -> list[dict]:
                     # This matches the "fMEGA", "fMEGA_X", "fPRIMAL" naming in Addressable Assets
                     evo_icon_url = resolve_form_icon_url(dex_number, short_evo_id, session, base_id)
 
+                # Determine form type based on temp evo ID
+                evo_form_type = determine_form_type(
+                    pokemon_id_str,
+                    short_evo_id,
+                    evo_form_name,
+                    is_temp_evo=True,
+                    temp_evo_type=evo_id
+                )
+
                 evo_variant = {
                     "pokemonId": pokemon_id_str,
                     "formId": short_evo_id,
                     "formName": evo_form_name,
+                    "formType": evo_form_type,
                     "isCostume": False,
                     "baseAttack": evo_stats.get("baseAttack"),
                     "baseDefense": evo_stats.get("baseDefense"),
