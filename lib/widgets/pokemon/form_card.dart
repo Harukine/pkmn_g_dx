@@ -38,7 +38,6 @@ class FormCard extends StatelessWidget {
       child: ListTile(
         leading: PokemonIcon(
           goIconUrl: form.goIconUrl,
-          spriteUrl: form.spriteUrl,
           size: UIConstants.iconSizeFormCard,
           fit: BoxFit.cover,
         ),

@@ -32,7 +32,6 @@ class PokemonListTile extends StatelessWidget {
       child: ListTile(
         leading: PokemonIcon(
           goIconUrl: entry.goIconUrl,
-          spriteUrl: entry.spriteUrl,
           size: UIConstants.iconSizeList,
         ),
         title: Text(entry.name),

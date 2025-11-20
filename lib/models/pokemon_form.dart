@@ -54,7 +54,6 @@ class PokemonForm {
   final int baseDefense;
   final int baseStamina;
   final int? dexNumber;
-  final String? spriteUrl; // PokeAPI fallback
   final String? goIconUrl; // Pokémon GO icon (preferred)
 
   // Backward compatibility
@@ -77,7 +76,6 @@ class PokemonForm {
     required this.baseDefense,
     required this.baseStamina,
     required this.dexNumber,
-    required this.spriteUrl,
     required this.goIconUrl,
   });
 
@@ -95,7 +93,6 @@ class PokemonForm {
       baseDefense: (json['baseDefense'] as num? ?? 0).toInt(),
       baseStamina: (json['baseStamina'] as num? ?? 0).toInt(),
       dexNumber: (json['dexNumber'] as num?)?.toInt(),
-      spriteUrl: json['spriteUrl']?.toString(),
       goIconUrl: json['goIconUrl']?.toString(),
     );
   }
@@ -111,7 +108,6 @@ class PokemonForm {
       'baseDefense': baseDefense,
       'baseStamina': baseStamina,
       'dexNumber': dexNumber,
-      'spriteUrl': spriteUrl,
       'goIconUrl': goIconUrl,
     };
   }
@@ -126,7 +122,6 @@ class PokemonForm {
     int? baseDefense,
     int? baseStamina,
     int? dexNumber,
-    String? spriteUrl,
     String? goIconUrl,
   }) {
     return PokemonForm(
@@ -139,7 +134,6 @@ class PokemonForm {
       baseDefense: baseDefense ?? this.baseDefense,
       baseStamina: baseStamina ?? this.baseStamina,
       dexNumber: dexNumber ?? this.dexNumber,
-      spriteUrl: spriteUrl ?? this.spriteUrl,
       goIconUrl: goIconUrl ?? this.goIconUrl,
     );
   }
