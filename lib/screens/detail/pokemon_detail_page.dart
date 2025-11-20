@@ -37,9 +37,23 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Separate costume forms from battle forms
-    final nonCostumeForms = widget.entry.forms.where((f) => !f.isCostume).toList();
-    final costumeForms = widget.entry.forms.where((f) => f.isCostume).toList();
+    // Group forms by type
+    final Map<FormType, List<PokemonForm>> groupedForms = {};
+    for (final form in widget.entry.forms) {
+      groupedForms.putIfAbsent(form.formType, () => []).add(form);
+    }
+
+    // Define display order
+    const displayOrder = [
+      FormType.normal,
+      FormType.mega,
+      FormType.primal,
+      FormType.regional,
+      FormType.shadow,
+      FormType.purified,
+      FormType.special,
+      FormType.costume,
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -67,39 +81,26 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
             Expanded(
               child: ListView(
                 children: [
-                  // Battle forms (default, regional, mega, etc.)
-                  if (nonCostumeForms.isNotEmpty) ...[
-                    Text(
-                      'Battle forms',
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                    const SizedBox(height: UIConstants.spacingSmall),
-                    ...nonCostumeForms.map(
-                      (f) => FormCard(
-                        form: f,
-                        isSelected: f == _selectedForm,
-                        onTap: () => _selectForm(f),
+                  for (final type in displayOrder)
+                    if (groupedForms.containsKey(type) && groupedForms[type]!.isNotEmpty) ...[
+                      Text(
+                        type.displayName,
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: UIConstants.paddingMedium),
-                  ],
-                  
-                  // Costume forms
-                  if (costumeForms.isNotEmpty) ...[
-                    Text(
-                      'Costume forms',
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                    const SizedBox(height: UIConstants.spacingSmall),
-                    ...costumeForms.map(
-                      (f) => FormCard(
-                        form: f,
-                        isCostume: true,
-                        isSelected: f == _selectedForm,
-                        onTap: () => _selectForm(f),
+                      const SizedBox(height: UIConstants.spacingSmall),
+                      ...groupedForms[type]!.map(
+                        (f) => FormCard(
+                          form: f,
+                          isCostume: f.isCostume,
+                          isSelected: f == _selectedForm,
+                          onTap: () => _selectForm(f),
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: UIConstants.paddingMedium),
+                    ],
                 ],
               ),
             ),
