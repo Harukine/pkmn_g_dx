@@ -1,16 +1,54 @@
-# pkmn_g_dx
+# Pokédex GO DX
 
-A Pokemon Go Pokedex Flutter Project.
+Pokédex GO DX is a lightweight, offline-first Pokédex tailored for **Pokémon GO**.  
+It parses Niantic's `GAME_MASTER` data to surface the most useful species and form
+information in a clean Flutter UI, so you can browse the entire roster anywhere.
+
+## Highlights
+- 📋 Full species coverage with canonical Pokédex order
+- 🔍 Sorting by name or Dex number, with instant navigation to detail pages
+- 🧬 Rich form support (regional, costumed, shadow, mega, primal, etc.)
+- 🎨 Consistent theming and responsive layouts across mobile/desktop platforms
+- 📦 Single JSON payload means no runtime API dependency
+
+## Data Pipeline
+1. Download the latest `GAME_MASTER` payload from the Pokémon GO network dumps.
+2. Run `assets/transform_game_master.py` to normalize the raw protobuf JSON into the
+   simplified structures found under `data/`.
+3. The Flutter app consumes `data/pokemon_go_slim.json` (referenced via
+   `AppConstants.pokemonDataPath`) to build models such as `PokemonEntry` and
+   `PokemonForm`.
+
+> Tip: rerun the transform script whenever Niantic updates move stats, forms, or
+> adds new species so your local Pokédex stays current.
 
 ## Getting Started
+```bash
+flutter --version        # ensure Flutter is installed
+flutter pub get
+flutter run              # pick ios, android, web, macos, windows, or linux
+```
 
-This project is a starting point for a Flutter application.
+To regenerate the slim dataset:
+```bash
+python3 assets/transform_game_master.py \
+  --input data/latest_game_master.json \
+  --output data/pokemon_go_slim.json
+```
 
-A few resources to get you started if this is your first Flutter project:
+## Key Modules
+- `lib/services/pokemon_service.dart` – loads/caches the JSON and exposes sorting.
+- `lib/models/` – strongly typed representations of species and form metadata.
+- `lib/screens/list/` – main Pokédex list UI with sorting controls.
+- `lib/screens/detail/` – deep dive into a single species, grouped by form type.
+- `lib/widgets/` – reusable tiles, headers, and form cards.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Roadmap
+- Add search and filtering (type, region, tags, stats thresholds).
+- Show move pools, raid utility, and IV breakpoints.
+- Sync with live GAME_MASTER feeds or crowd-sourced APIs.
+- Add widget/golden tests plus CI to prevent regressions.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+Made with Flutter ❤️ for Pokémon GO trainers who want fast reference data without
+hoping their internet connection holds up mid-raid.
