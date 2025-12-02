@@ -14,7 +14,8 @@ information in a clean Flutter UI, so you can browse the entire roster anywhere.
 ## Data Pipeline
 1. Download the latest `GAME_MASTER` payload from the Pokémon GO network dumps.
 2. Run `assets/transform_game_master.py` to normalize the raw protobuf JSON into the
-   simplified structures found under `data/`.
+   simplified structures found under `data/`, merging `formSettings` metadata so costume
+   and regional variants stay aligned with Niantic’s schema.
 3. The Flutter app consumes `data/pokemon_go_slim.json` (referenced via
    `AppConstants.pokemonDataPath`) to build models such as `PokemonEntry` and
    `PokemonForm`, relying exclusively on `pogo_assets` icons for imagery.

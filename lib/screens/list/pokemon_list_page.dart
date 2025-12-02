@@ -4,6 +4,9 @@ import '../../services/pokemon_service.dart';
 import '../../models/pokemon_entry.dart';
 import '../detail/pokemon_detail_page.dart';
 import 'widgets/pokemon_list_tile.dart';
+import 'widgets/pokemon_card.dart';
+
+enum ViewMode { list, grid }
 
 /// Main list page displaying all Pokemon
 class PokemonListPage extends StatefulWidget {
@@ -18,6 +21,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
   List<PokemonEntry> _pokemonList = [];
   bool _loading = true;
   SortOption _currentSort = SortOption.idAsc;
+  ViewMode _viewMode = ViewMode.list;
 
   @override
   void initState() {
@@ -59,6 +63,17 @@ class _PokemonListPageState extends State<PokemonListPage> {
       appBar: AppBar(
         title: const Text('Pokédex'),
         actions: [
+          IconButton(
+            icon: Icon(
+              _viewMode == ViewMode.list ? Icons.grid_view : Icons.view_list,
+            ),
+            onPressed: () {
+              setState(() {
+                _viewMode = _viewMode == ViewMode.list ? ViewMode.grid : ViewMode.list;
+              });
+            },
+            tooltip: _viewMode == ViewMode.list ? 'Grid View' : 'List View',
+          ),
           PopupMenuButton<SortOption>(
             onSelected: _sortList,
             itemBuilder: (context) => [
@@ -82,22 +97,46 @@ class _PokemonListPageState extends State<PokemonListPage> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: _pokemonList.length,
-        itemBuilder: (context, index) {
-          final entry = _pokemonList[index];
-          return PokemonListTile(
-            entry: entry,
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => PokemonDetailPage(entry: entry),
-                ),
-              );
-            },
-          );
-        },
-      ),
+      body: _viewMode == ViewMode.list
+          ? ListView.builder(
+              itemCount: _pokemonList.length,
+              itemBuilder: (context, index) {
+                final entry = _pokemonList[index];
+                return PokemonListTile(
+                  entry: entry,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => PokemonDetailPage(entry: entry),
+                      ),
+                    );
+                  },
+                );
+              },
+            )
+          : GridView.builder(
+              padding: const EdgeInsets.all(8),
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 150,
+                childAspectRatio: 0.85,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+              ),
+              itemCount: _pokemonList.length,
+              itemBuilder: (context, index) {
+                final entry = _pokemonList[index];
+                return PokemonCard(
+                  entry: entry,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => PokemonDetailPage(entry: entry),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
     );
   }
 }

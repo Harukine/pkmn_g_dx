@@ -1,3 +1,6 @@
+import 'evolution.dart';
+import '../core/utils/json_utils.dart';
+
 /// Enum representing the type of form
 enum FormType {
   normal,
@@ -55,9 +58,20 @@ class PokemonForm {
   final int baseStamina;
   final int? dexNumber;
   final String? goIconUrl; // Pokémon GO icon (preferred)
+  final String? shinyGoIconUrl;
+  final bool isCostume;
+  
+  // New fields
+  final String? familyId;
+  final List<String> quickMoves;
+  final List<String> cinematicMoves;
+  final List<String> eliteQuickMoves;
+  final List<String> eliteCinematicMoves;
+  final List<Evolution> nextEvolutions;
+  final int? thirdMoveStardust;
+  final int? thirdMoveCandy;
 
   // Backward compatibility
-  bool get isCostume => formType == FormType.costume;
   bool get isBattleForm =>
       formType == FormType.mega ||
       formType == FormType.primal ||
@@ -77,11 +91,31 @@ class PokemonForm {
     required this.baseStamina,
     required this.dexNumber,
     required this.goIconUrl,
+    this.shinyGoIconUrl,
+    this.isCostume = false,
+    this.familyId,
+    this.quickMoves = const [],
+    this.cinematicMoves = const [],
+    this.eliteQuickMoves = const [],
+    this.eliteCinematicMoves = const [],
+    this.nextEvolutions = const [],
+    this.thirdMoveStardust,
+    this.thirdMoveCandy,
   });
+
+
 
   factory PokemonForm.fromJson(Map<String, dynamic> json) {
     String asString(dynamic v) => v?.toString() ?? '';
     final typesRaw = json['types'] as List<dynamic>? ?? const [];
+    
+    final quickMovesRaw = json['quickMoves'] as List<dynamic>? ?? const [];
+    final cinematicMovesRaw = json['cinematicMoves'] as List<dynamic>? ?? const [];
+    final eliteQuickMovesRaw = json['eliteQuickMoves'] as List<dynamic>? ?? const [];
+    final eliteCinematicMovesRaw = json['eliteCinematicMoves'] as List<dynamic>? ?? const [];
+    
+    final evolutionData = json['evolution'] as Map<String, dynamic>? ?? {};
+    final nextEvolutionsRaw = evolutionData['nextEvolutions'] as List<dynamic>? ?? const [];
 
     return PokemonForm(
       pokemonId: asString(json['pokemonId']),
@@ -89,11 +123,23 @@ class PokemonForm {
       formName: asString(json['formName']),
       formType: FormType.fromString(json['formType']?.toString()),
       types: typesRaw.map((e) => e.toString()).toList(),
-      baseAttack: (json['baseAttack'] as num? ?? 0).toInt(),
-      baseDefense: (json['baseDefense'] as num? ?? 0).toInt(),
-      baseStamina: (json['baseStamina'] as num? ?? 0).toInt(),
-      dexNumber: (json['dexNumber'] as num?)?.toInt(),
+      baseAttack: JsonUtils.parseInt(json['baseAttack']),
+      baseDefense: JsonUtils.parseInt(json['baseDefense']),
+      baseStamina: JsonUtils.parseInt(json['baseStamina']),
+      dexNumber: JsonUtils.parseInt(json['dexNumber']),
       goIconUrl: json['goIconUrl']?.toString(),
+      shinyGoIconUrl: json['shinyGoIconUrl']?.toString(),
+      isCostume: json['isCostume'] as bool? ?? false,
+      familyId: json['familyId']?.toString(),
+      quickMoves: quickMovesRaw.map((e) => e.toString()).toList(),
+      cinematicMoves: cinematicMovesRaw.map((e) => e.toString()).toList(),
+      eliteQuickMoves: eliteQuickMovesRaw.map((e) => e.toString()).toList(),
+      eliteCinematicMoves: eliteCinematicMovesRaw.map((e) => e.toString()).toList(),
+      nextEvolutions: nextEvolutionsRaw
+          .map((e) => Evolution.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      thirdMoveStardust: JsonUtils.tryParseInt(evolutionData['thirdMoveStardust']),
+      thirdMoveCandy: JsonUtils.tryParseInt(evolutionData['thirdMoveCandy']),
     );
   }
 
@@ -109,6 +155,18 @@ class PokemonForm {
       'baseStamina': baseStamina,
       'dexNumber': dexNumber,
       'goIconUrl': goIconUrl,
+      'shinyGoIconUrl': shinyGoIconUrl,
+      'isCostume': isCostume,
+      'familyId': familyId,
+      'quickMoves': quickMoves,
+      'cinematicMoves': cinematicMoves,
+      'eliteQuickMoves': eliteQuickMoves,
+      'eliteCinematicMoves': eliteCinematicMoves,
+      'evolution': {
+        'nextEvolutions': nextEvolutions.map((e) => e.toJson()).toList(),
+        'thirdMoveStardust': thirdMoveStardust,
+        'thirdMoveCandy': thirdMoveCandy,
+      },
     };
   }
 
@@ -123,6 +181,16 @@ class PokemonForm {
     int? baseStamina,
     int? dexNumber,
     String? goIconUrl,
+    String? shinyGoIconUrl, // Added as per instruction
+    bool? isCostume, // Added as per instruction
+    String? familyId,
+    List<String>? quickMoves,
+    List<String>? cinematicMoves,
+    List<String>? eliteQuickMoves,
+    List<String>? eliteCinematicMoves,
+    List<Evolution>? nextEvolutions,
+    int? thirdMoveStardust,
+    int? thirdMoveCandy,
   }) {
     return PokemonForm(
       pokemonId: pokemonId ?? this.pokemonId,
@@ -135,6 +203,16 @@ class PokemonForm {
       baseStamina: baseStamina ?? this.baseStamina,
       dexNumber: dexNumber ?? this.dexNumber,
       goIconUrl: goIconUrl ?? this.goIconUrl,
+      shinyGoIconUrl: shinyGoIconUrl ?? this.shinyGoIconUrl,
+      isCostume: isCostume ?? this.isCostume,
+      familyId: familyId ?? this.familyId,
+      quickMoves: quickMoves ?? this.quickMoves,
+      cinematicMoves: cinematicMoves ?? this.cinematicMoves,
+      eliteQuickMoves: eliteQuickMoves ?? this.eliteQuickMoves,
+      eliteCinematicMoves: eliteCinematicMoves ?? this.eliteCinematicMoves,
+      nextEvolutions: nextEvolutions ?? this.nextEvolutions,
+      thirdMoveStardust: thirdMoveStardust ?? this.thirdMoveStardust,
+      thirdMoveCandy: thirdMoveCandy ?? this.thirdMoveCandy,
     );
   }
 }
