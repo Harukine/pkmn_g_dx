@@ -1,4 +1,5 @@
 import 'pokemon_form.dart';
+import '../core/utils/json_utils.dart';
 
 /// Represents a Pokémon species with all its forms
 class PokemonEntry {
@@ -28,6 +29,8 @@ class PokemonEntry {
     required this.forms,
   });
 
+
+
   factory PokemonEntry.fromJson(Map<String, dynamic> json) {
     String asString(dynamic v) => v?.toString() ?? '';
     final typesRaw = json['types'] as List<dynamic>? ?? const [];
@@ -38,11 +41,11 @@ class PokemonEntry {
       name: asString(json['name']),
       defaultPokemonId: asString(json['defaultPokemonId']),
       types: typesRaw.map((e) => e.toString()).toList(),
-      baseAttack: (json['baseAttack'] as num? ?? 0).toInt(),
-      baseDefense: (json['baseDefense'] as num? ?? 0).toInt(),
-      baseStamina: (json['baseStamina'] as num? ?? 0).toInt(),
+      baseAttack: JsonUtils.parseInt(json['baseAttack']),
+      baseDefense: JsonUtils.parseInt(json['baseDefense']),
+      baseStamina: JsonUtils.parseInt(json['baseStamina']),
       hasCostumeForms: json['hasCostumeForms'] as bool? ?? false,
-      dexNumber: (json['dexNumber'] as num?)?.toInt(),
+      dexNumber: JsonUtils.tryParseInt(json['dexNumber']),
       goIconUrl: json['goIconUrl']?.toString(),
       forms: formsRaw
           .map((e) => PokemonForm.fromJson(e as Map<String, dynamic>))

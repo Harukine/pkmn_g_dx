@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/ui_constants.dart';
+import '../../../core/constants/type_colors.dart';
 import '../../../models/pokemon_entry.dart';
 import '../../../widgets/common/pokemon_icon.dart';
 import '../../detail/widgets/stats_row.dart';
@@ -43,7 +44,15 @@ class PokemonListTile extends StatelessWidget {
               children: entry.types
                   .map(
                     (t) => Chip(
-                      label: Text(t),
+                      label: Text(
+                        t,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                        ),
+                      ),
+                      backgroundColor: TypeColors.getColorForType(t),
                       visualDensity: VisualDensity.compact,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
