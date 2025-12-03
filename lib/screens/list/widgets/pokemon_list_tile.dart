@@ -1,10 +1,11 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/ui_constants.dart';
 import '../../../core/constants/type_colors.dart';
 import '../../../models/pokemon_entry.dart';
 import '../../../widgets/common/pokemon_icon.dart';
-import '../../detail/widgets/stats_row.dart';
+import '../../../widgets/common/pokemon_icon.dart';
 
 /// List tile widget for displaying a Pokemon in the list view
 class PokemonListTile extends StatelessWidget {
@@ -19,67 +20,107 @@ class PokemonListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formsCount = entry.forms.length;
-    final formLabel = formsCount > 1 ? '$formsCount forms' : '$formsCount form';
+    // Calculate a pseudo-CP based on base stats for display
+    final cp = ((entry.baseAttack *
+            sqrt(entry.baseDefense).toInt() *
+            sqrt(entry.baseStamina).toInt()) /
+        10)
+        .toInt();
 
     return Card(
       margin: const EdgeInsets.symmetric(
         horizontal: UIConstants.paddingMedium,
-        vertical: 6,
+        vertical: 4,
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
       ),
-      child: ListTile(
-        leading: PokemonIcon(
-          goIconUrl: entry.goIconUrl,
-          size: UIConstants.iconSizeList,
-        ),
-        title: Text(entry.name),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Wrap(
-              spacing: 6,
-              children: entry.types
-                  .map(
-                    (t) => Chip(
-                      label: Text(
-                        t,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              PokemonIcon(
+                goIconUrl: entry.goIconUrl,
+                size: 60,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Text(
+                          'CP',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                      backgroundColor: TypeColors.getColorForType(t),
-                      visualDensity: VisualDensity.compact,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        const SizedBox(width: 4),
+                        Text(
+                          '$cp',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                  )
-                  .toList(),
-            ),
-            const SizedBox(height: UIConstants.spacingSmall),
-            StatsRow(
-              attack: entry.baseAttack,
-              defense: entry.baseDefense,
-              stamina: entry.baseStamina,
-              formLabel: formLabel,
-            ),
-            if (entry.hasCostumeForms)
-              Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: Text(
-                  'Includes costume forms',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(fontStyle: FontStyle.italic),
+                    Text(
+                      entry.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    // HP Bar visual
+                    Container(
+                      height: 4,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-          ],
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  if (entry.dexNumber != null)
+                    Text(
+                      '#${entry.dexNumber}',
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
+                    ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: entry.types
+                        .map(
+                          (t) => Padding(
+                            padding: const EdgeInsets.only(left: 4),
+                            child: CircleAvatar(
+                              radius: 6,
+                              backgroundColor: TypeColors.getColorForType(t),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-        onTap: onTap,
       ),
     );
   }

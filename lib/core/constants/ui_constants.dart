@@ -5,12 +5,9 @@ class UIConstants {
 
   // Icon sizes
   static const double iconSizeList = 40.0;
-  static const double iconSizeDetailHeader = 200.0;
-  static const double iconSizeFormCard = 32.0;
 
   // Border radius
   static const double borderRadiusIcon = 8.0;
-  static const double borderRadiusHeader = 12.0;
   static const double borderRadiusCard = 8.0;
 
   // Spacing

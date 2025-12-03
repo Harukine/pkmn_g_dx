@@ -5,6 +5,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import '../core/constants/app_constants.dart';
 import '../models/filter_options.dart';
 import '../models/pokemon_entry.dart';
+import '../models/pokemon_form.dart';
 
 /// Sort options for Pokemon list
 enum SortOption {
@@ -30,13 +31,56 @@ class PokemonService {
       final jsonString = await rootBundle.loadString(AppConstants.pokemonDataPath);
       final data = json.decode(jsonString) as List<dynamic>;
 
-      return data
+      final rawList = data
           .map((e) => PokemonEntry.fromJson(e as Map<String, dynamic>))
           .toList();
+
+      return _deduplicatePokemon(rawList);
     } catch (e) {
       debugPrint('Error loading Pokémon: $e');
       rethrow;
     }
+  }
+
+  List<PokemonEntry> _deduplicatePokemon(List<PokemonEntry> list) {
+    final Map<String, PokemonEntry> uniqueEntries = {};
+
+    for (final entry in list) {
+      if (!uniqueEntries.containsKey(entry.name)) {
+        uniqueEntries[entry.name] = entry;
+      } else {
+        final existing = uniqueEntries[entry.name]!;
+        
+        // Determine better ID (longest is usually correct, e.g. HO_OH vs HO)
+        final betterId = entry.basePokemonId.length > existing.basePokemonId.length
+            ? entry.basePokemonId
+            : existing.basePokemonId;
+            
+        // Merge forms
+        final Map<String, PokemonForm> mergedForms = {};
+        
+        // Helper to add forms
+        void addForms(List<PokemonForm> forms) {
+          for (final form in forms) {
+            final key = form.formName; // Use formName as unique key
+            if (!mergedForms.containsKey(key)) {
+              mergedForms[key] = form;
+            }
+          }
+        }
+        
+        addForms(existing.forms);
+        addForms(entry.forms);
+        
+        // Create merged entry
+        uniqueEntries[entry.name] = existing.copyWith(
+          basePokemonId: betterId,
+          forms: mergedForms.values.toList(),
+        );
+      }
+    }
+
+    return uniqueEntries.values.toList();
   }
 
   /// Filter a list of Pokemon based on the given filter options
