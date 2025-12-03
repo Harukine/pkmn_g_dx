@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/ui_constants.dart';
@@ -17,41 +18,92 @@ class PokemonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Calculate a pseudo-CP based on base stats for display
+    final cp = ((entry.baseAttack *
+            sqrt(entry.baseDefense).toInt() *
+            sqrt(entry.baseStamina).toInt()) /
+        10)
+        .toInt();
+
     return Card(
       clipBehavior: Clip.antiAlias,
+      elevation: 2,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: InkWell(
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(UIConstants.paddingSmall),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              PokemonIcon(
-                goIconUrl: entry.goIconUrl,
-                size: 80,
-              ),
-              const SizedBox(height: UIConstants.spacingSmall),
-              Text(
-                entry.name,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              if (entry.dexNumber != null)
-                Text(
-                  '#${entry.dexNumber}',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey,
-                      ),
+        child: Stack(
+          children: [
+            // Background gradient based on type? Or just white/light grey
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white,
+                    Colors.grey[100]!,
+                  ],
                 ),
-            ],
-          ),
+              ),
+            ),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final iconSize = min(constraints.maxWidth * 0.7, 90.0);
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16, bottom: 24),
+                    child: PokemonIcon(
+                      goIconUrl: entry.goIconUrl,
+                      size: iconSize,
+                    ),
+                  ),
+                );
+              },
+            ),
+            Positioned(
+              top: 4,
+              left: 4,
+              child: Text(
+                'CP $cp',
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                color: Colors.black.withOpacity(0.05),
+                child: Text(
+                  entry.name,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 10,
+                      ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+            if (entry.hasCostumeForms)
+              const Positioned(
+                top: 4,
+                right: 4,
+                child: Icon(
+                  Icons.checkroom,
+                  size: 14,
+                  color: Colors.purple,
+                ),
+              ),
+          ],
         ),
       ),
     );
