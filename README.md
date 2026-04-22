@@ -34,9 +34,9 @@ flutter run              # pick ios, android, web, macos, windows, or linux
 
 To regenerate the slim dataset:
 ```bash
-python3 assets/transform_game_master.py \
-  --input data/latest_game_master.json \
-  --output data/pokemon_go_slim.json
+python scripts/download_game_master.py
+python scripts/icon_scraper.py
+python scripts/build_pokedex.py
 ```
 
 ## Key Modules
