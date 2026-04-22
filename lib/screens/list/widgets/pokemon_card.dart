@@ -50,7 +50,7 @@ class PokemonCard extends StatelessWidget {
             ),
             LayoutBuilder(
               builder: (context, constraints) {
-                final iconSize = min(constraints.maxWidth * 0.7, 90.0);
+                final iconSize = min(constraints.maxWidth * 0.75, 120.0);
                 return Center(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 16, bottom: 24),

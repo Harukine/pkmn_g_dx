@@ -8,7 +8,6 @@ import 'widgets/pokemon_list_tile.dart';
 import 'widgets/pokemon_card.dart';
 import 'widgets/filter_widget.dart';
 import 'widgets/pokemon_list_header.dart';
-import 'widgets/pokeball_fab.dart';
 
 enum ViewMode { list, grid }
 
@@ -80,6 +79,69 @@ class _PokemonListPageState extends State<PokemonListPage> {
     );
   }
 
+  void _showSortMenu() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    'Sort By',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                _buildSortItem('ID', SortOption.idAsc, SortOption.idDesc, defaultIsAscending: true),
+                _buildSortItem('Name', SortOption.nameAsc, SortOption.nameDesc, defaultIsAscending: true),
+                _buildSortItem('CP', SortOption.maxCpDesc, SortOption.maxCpAsc, defaultIsAscending: false),
+                _buildSortItem('Attack', SortOption.attackDesc, SortOption.attackAsc, defaultIsAscending: false),
+                _buildSortItem('Defense', SortOption.defenseDesc, SortOption.defenseAsc, defaultIsAscending: false),
+                _buildSortItem('HP', SortOption.staminaDesc, SortOption.staminaAsc, defaultIsAscending: false),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildSortItem(String label, SortOption defaultOption, SortOption alternateOption, {required bool defaultIsAscending}) {
+    final isSelected = _currentSort == defaultOption || _currentSort == alternateOption;
+    
+    IconData? trailingIcon;
+    if (isSelected) {
+      bool isCurrentlyAscending = (_currentSort == defaultOption) ? defaultIsAscending : !defaultIsAscending;
+      trailingIcon = isCurrentlyAscending ? Icons.arrow_upward : Icons.arrow_downward;
+    }
+
+    return ListTile(
+      title: Text(
+        label,
+        style: TextStyle(
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          color: isSelected ? Colors.blue : null,
+        ),
+      ),
+      trailing: isSelected ? Icon(trailingIcon, color: Colors.blue) : null,
+      onTap: () {
+        if (_currentSort == defaultOption) {
+          _sortList(alternateOption);
+        } else {
+          _sortList(defaultOption);
+        }
+        Navigator.pop(context);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_loading) {
@@ -95,12 +157,16 @@ class _PokemonListPageState extends State<PokemonListPage> {
             children: [
               PokemonListHeader(
                 onFilterPressed: _openFilterDialog,
-                onSortPressed: () {
-                  // TODO: Show sort menu
-                },
+                onSortPressed: _showSortMenu,
                 onViewModePressed: () {
                   setState(() {
                     _viewMode = _viewMode == ViewMode.list ? ViewMode.grid : ViewMode.list;
+                  });
+                },
+                onSearchChanged: (query) {
+                  setState(() {
+                    _currentFilters = _currentFilters.copyWith(searchQuery: query);
+                    _applyFiltersAndSort();
                   });
                 },
                 isGridView: _viewMode == ViewMode.grid,
@@ -110,7 +176,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
                     ? const Center(child: Text('No Pokémon found matching filters.', style: TextStyle(color: Colors.white)))
                     : _viewMode == ViewMode.list
                         ? ListView.builder(
-                            padding: const EdgeInsets.only(bottom: 80), // Space for FAB
+                            padding: const EdgeInsets.only(bottom: 24), // Space removed for FAB
                             itemCount: _displayedPokemon.length,
                             itemBuilder: (context, index) {
                               final entry = _displayedPokemon[index];
@@ -126,46 +192,52 @@ class _PokemonListPageState extends State<PokemonListPage> {
                               );
                             },
                           )
-                        : GridView.builder(
-                            padding: const EdgeInsets.only(
-                              left: 8,
-                              right: 8,
-                              top: 8,
-                              bottom: 80, // Space for FAB
-                            ),
-                            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 120, // Cards will be at most 120px wide
-                              childAspectRatio: 0.75, // Slightly taller to fit content comfortably
-                              crossAxisSpacing: 8,
-                              mainAxisSpacing: 8,
-                            ),
-                            itemCount: _displayedPokemon.length,
-                            itemBuilder: (context, index) {
-                              final entry = _displayedPokemon[index];
-                              return PokemonCard(
-                                entry: entry,
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (_) => PokemonDetailPage(entry: entry),
-                                    ),
+                        : Builder(
+                            builder: (context) {
+                              final screenWidth = MediaQuery.of(context).size.width;
+                              int crossAxisCount;
+                              if (screenWidth < 360) {
+                                crossAxisCount = 2;
+                              } else if (screenWidth < 600) {
+                                crossAxisCount = 3;
+                              } else if (screenWidth < 900) {
+                                crossAxisCount = 5;
+                              } else {
+                                crossAxisCount = 7;
+                              }
+                              
+                              return GridView.builder(
+                                padding: const EdgeInsets.only(
+                                  left: 8,
+                                  right: 8,
+                                  top: 8,
+                                  bottom: 24, // Space removed for FAB
+                                ),
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: crossAxisCount,
+                                  childAspectRatio: 0.75, // Slightly taller to fit content comfortably
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
+                                ),
+                                itemCount: _displayedPokemon.length,
+                                itemBuilder: (context, index) {
+                                  final entry = _displayedPokemon[index];
+                                  return PokemonCard(
+                                    entry: entry,
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (_) => PokemonDetailPage(entry: entry),
+                                        ),
+                                      );
+                                    },
                                   );
                                 },
                               );
-                            },
+                            }
                           ),
               ),
             ],
-          ),
-          Positioned(
-            bottom: 24,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: PokeballFab(
-                onPressed: _openFilterDialog, // Using FAB for menu/filter for now
-              ),
-            ),
           ),
         ],
       ),

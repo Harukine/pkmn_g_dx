@@ -8,6 +8,7 @@ class FilterOptions {
   final RangeValues? staminaRange;
   final Set<int> generations;
   final Set<FormType> formTypes;
+  final String searchQuery;
 
   const FilterOptions({
     this.types = const {},
@@ -16,6 +17,7 @@ class FilterOptions {
     this.staminaRange,
     this.generations = const {},
     this.formTypes = const {},
+    this.searchQuery = '',
   });
 
   FilterOptions copyWith({
@@ -25,6 +27,7 @@ class FilterOptions {
     RangeValues? staminaRange,
     Set<int>? generations,
     Set<FormType>? formTypes,
+    String? searchQuery,
   }) {
     return FilterOptions(
       types: types ?? this.types,
@@ -33,6 +36,7 @@ class FilterOptions {
       staminaRange: staminaRange ?? this.staminaRange,
       generations: generations ?? this.generations,
       formTypes: formTypes ?? this.formTypes,
+      searchQuery: searchQuery ?? this.searchQuery,
     );
   }
 
@@ -42,5 +46,6 @@ class FilterOptions {
       defenseRange == null &&
       staminaRange == null &&
       generations.isEmpty &&
-      formTypes.isEmpty;
+      formTypes.isEmpty &&
+      searchQuery.isEmpty;
 }

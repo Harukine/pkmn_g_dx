@@ -78,16 +78,6 @@ class PokemonListTile extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    // HP Bar visual
-                    Container(
-                      height: 4,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
                   ],
                 ),
               ),

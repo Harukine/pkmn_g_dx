@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -13,9 +14,14 @@ enum SortOption {
   nameDesc,
   idAsc,
   idDesc,
+  attackAsc,
   attackDesc,
+  defenseAsc,
   defenseDesc,
+  staminaAsc,
   staminaDesc,
+  maxCpAsc,
+  maxCpDesc,
 }
 
 /// Service class for loading and managing Pokemon data
@@ -91,6 +97,16 @@ class PokemonService {
     if (filters.isEmpty) return pokemonList;
 
     return pokemonList.where((entry) {
+      // Filter by Search Query
+      if (filters.searchQuery.isNotEmpty) {
+        final query = filters.searchQuery.toLowerCase();
+        final nameLower = entry.name.toLowerCase();
+        final dexStr = entry.dexNumber?.toString() ?? '';
+        if (!nameLower.contains(query) && !dexStr.contains(query)) {
+          return false;
+        }
+      }
+
       // Filter by Type
       if (filters.types.isNotEmpty) {
         final matchesType = entry.types.any((type) => filters.types.contains(type));
@@ -166,14 +182,37 @@ class PokemonService {
       case SortOption.idDesc:
         sorted.sort((a, b) => (b.dexNumber ?? 0).compareTo(a.dexNumber ?? 0));
         break;
+      case SortOption.attackAsc:
+        sorted.sort((a, b) => a.baseAttack.compareTo(b.baseAttack));
+        break;
       case SortOption.attackDesc:
         sorted.sort((a, b) => b.baseAttack.compareTo(a.baseAttack));
+        break;
+      case SortOption.defenseAsc:
+        sorted.sort((a, b) => a.baseDefense.compareTo(b.baseDefense));
         break;
       case SortOption.defenseDesc:
         sorted.sort((a, b) => b.baseDefense.compareTo(a.baseDefense));
         break;
+      case SortOption.staminaAsc:
+        sorted.sort((a, b) => a.baseStamina.compareTo(b.baseStamina));
+        break;
       case SortOption.staminaDesc:
         sorted.sort((a, b) => b.baseStamina.compareTo(a.baseStamina));
+        break;
+      case SortOption.maxCpAsc:
+        sorted.sort((a, b) {
+          int cpA = ((a.baseAttack * sqrt(a.baseDefense).toInt() * sqrt(a.baseStamina).toInt()) / 10).toInt();
+          int cpB = ((b.baseAttack * sqrt(b.baseDefense).toInt() * sqrt(b.baseStamina).toInt()) / 10).toInt();
+          return cpA.compareTo(cpB);
+        });
+        break;
+      case SortOption.maxCpDesc:
+        sorted.sort((a, b) {
+          int cpA = ((a.baseAttack * sqrt(a.baseDefense).toInt() * sqrt(a.baseStamina).toInt()) / 10).toInt();
+          int cpB = ((b.baseAttack * sqrt(b.baseDefense).toInt() * sqrt(b.baseStamina).toInt()) / 10).toInt();
+          return cpB.compareTo(cpA);
+        });
         break;
     }
 
