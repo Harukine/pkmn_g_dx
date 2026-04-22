@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/themes/app_theme.dart';
 import '../../services/pokemon_service.dart';
 import '../../models/pokemon_entry.dart';
 import '../../models/filter_options.dart';
@@ -127,10 +128,10 @@ class _PokemonListPageState extends State<PokemonListPage> {
         label,
         style: TextStyle(
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          color: isSelected ? Colors.blue : null,
+          color: isSelected ? AppColors.pokedexRed : AppColors.textPrimary,
         ),
       ),
-      trailing: isSelected ? Icon(trailingIcon, color: Colors.blue) : null,
+      trailing: isSelected ? Icon(trailingIcon, color: AppColors.pokedexRed) : null,
       onTap: () {
         if (_currentSort == defaultOption) {
           _sortList(alternateOption);
@@ -145,8 +146,21 @@ class _PokemonListPageState extends State<PokemonListPage> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        backgroundColor: AppColors.bgDark,
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(color: AppColors.pokedexRed),
+              const SizedBox(height: 16),
+              Text(
+                'Loading Pokédex…',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ],
+          ),
+        ),
       );
     }
 
@@ -173,10 +187,27 @@ class _PokemonListPageState extends State<PokemonListPage> {
               ),
               Expanded(
                 child: _displayedPokemon.isEmpty
-                    ? const Center(child: Text('No Pokémon found matching filters.', style: TextStyle(color: Colors.white)))
+                    ? Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.search_off_rounded, color: AppColors.textOnDarkDim, size: 48),
+                            const SizedBox(height: 12),
+                            Text(
+                              'No Pokémon found',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Try adjusting your search or filters',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      )
                     : _viewMode == ViewMode.list
                         ? ListView.builder(
-                            padding: const EdgeInsets.only(bottom: 24), // Space removed for FAB
+                            padding: const EdgeInsets.only(top: 8, bottom: 24),
                             itemCount: _displayedPokemon.length,
                             itemBuilder: (context, index) {
                               final entry = _displayedPokemon[index];

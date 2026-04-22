@@ -1,11 +1,12 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
-import '../../../core/constants/ui_constants.dart';
+import '../../../core/constants/type_colors.dart';
+import '../../../core/themes/app_theme.dart';
 import '../../../models/pokemon_entry.dart';
 import '../../../widgets/common/pokemon_icon.dart';
 
-/// Compact card widget for grid view showing Pokemon icon and name
+/// Responsive grid card — solid type-tinted background, top strip, large icon, name + dex#.
 class PokemonCard extends StatelessWidget {
   final PokemonEntry entry;
   final VoidCallback onTap;
@@ -18,89 +19,92 @@ class PokemonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Calculate a pseudo-CP based on base stats for display
-    final cp = ((entry.baseAttack *
-            sqrt(entry.baseDefense).toInt() *
-            sqrt(entry.baseStamina).toInt()) /
-        10)
-        .toInt();
+    final primaryType = entry.types.isNotEmpty ? entry.types.first : null;
+    final typeColor = primaryType != null
+        ? TypeColors.getColorForType(primaryType)
+        : AppColors.pokedexRed;
 
-    return Card(
+    return Material(
+      color: typeColor.withOpacity(0.12),
+      borderRadius: BorderRadius.circular(14),
       clipBehavior: Clip.antiAlias,
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
       child: InkWell(
         onTap: onTap,
         child: Stack(
           children: [
-            // Background gradient based on type? Or just white/light grey
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.white,
-                    Colors.grey[100]!,
-                  ],
-                ),
-              ),
-            ),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final iconSize = min(constraints.maxWidth * 0.75, 120.0);
-                return Center(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Type-colored strip at top (4px)
+                Container(height: 4, color: typeColor),
+
+                // Icon area
+                Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 16, bottom: 24),
-                    child: PokemonIcon(
-                      goIconUrl: entry.goIconUrl,
-                      size: iconSize,
+                    padding: const EdgeInsets.fromLTRB(4, 6, 4, 2),
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final size = min(constraints.maxWidth * 0.78, 112.0);
+                        return Center(
+                          child: PokemonIcon(
+                            goIconUrl: entry.goIconUrl,
+                            size: size,
+                          ),
+                        );
+                      },
                     ),
                   ),
-                );
-              },
-            ),
-            Positioned(
-              top: 4,
-              left: 4,
-              child: Text(
-                'CP $cp',
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
                 ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-                color: Colors.black.withOpacity(0.05),
-                child: Text(
-                  entry.name,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 10,
+
+                // Name + dex number
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 0, 4, 6),
+                  child: Column(
+                    children: [
+                      Text(
+                        entry.name,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary,
+                          height: 1.2,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                      if (entry.dexNumber != null)
+                        Text(
+                          '#${entry.dexNumber!.toString().padLeft(4, '0')}',
+                          style: const TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textSecondary,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
+
+            // Costume badge — overlaid at top-right
             if (entry.hasCostumeForms)
-              const Positioned(
-                top: 4,
-                right: 4,
-                child: Icon(
-                  Icons.checkroom,
-                  size: 14,
-                  color: Colors.purple,
+              Positioned(
+                top: 8,
+                right: 5,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: Colors.purple.shade50,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: const Icon(
+                    Icons.checkroom_rounded,
+                    size: 11,
+                    color: Colors.purple,
+                  ),
                 ),
               ),
           ],

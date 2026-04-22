@@ -1,62 +1,117 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-/// Application theme configuration
+/// Pokémon GO Dex — Design Token System
+/// Palette inspired by the classic Pokédex: deep navy bg, Pokémon Red accent,
+/// clean white surfaces and readable type chips.
+class AppColors {
+  AppColors._();
+
+  // ── Brand ─────────────────────────────────────────────────
+  static const pokedexRed    = Color(0xFFCC0000);
+  static const pokedexRedDim = Color(0xFF9E0000);
+  static const accent        = Color(0xFFFFCB05); // Pikachu yellow
+  static const accentDark    = Color(0xFFF0A800);
+
+  // ── Backgrounds ───────────────────────────────────────────
+  static const bgDark   = Color(0xFF1A1A2E); // deep navy
+  static const bgMid    = Color(0xFF16213E);
+  static const bgCard   = Color(0xFF0F3460);
+  static const bgSurface = Color(0xFFF7F7FA);
+
+  // ── Text ──────────────────────────────────────────────────
+  static const textPrimary   = Color(0xFF1A1A2E);
+  static const textSecondary = Color(0xFF6B7280);
+  static const textOnDark    = Color(0xFFFFFFFF);
+  static const textOnDarkDim = Color(0xFFB0B8C8);
+
+  // ── Divider / border ──────────────────────────────────────
+  static const divider = Color(0xFFE5E7EB);
+}
+
 class AppTheme {
-  // Private constructor to prevent instantiation
   AppTheme._();
 
-  /// Light theme configuration
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      scaffoldBackgroundColor: const Color(0xFF183D3D), // Dark teal background like map at night or menu
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color(0xFF00BFA5), // Teal accent
-        primary: const Color(0xFF00BFA5),
-        secondary: const Color(0xFF4FC3F7),
-        surface: Colors.white,
-        background: const Color(0xFF183D3D),
-        brightness: Brightness.light,
+      scaffoldBackgroundColor: AppColors.bgDark,
+      colorScheme: const ColorScheme(
+        brightness: Brightness.dark,
+        primary: AppColors.pokedexRed,
+        onPrimary: Colors.white,
+        secondary: AppColors.accent,
+        onSecondary: AppColors.textPrimary,
+        surface: AppColors.bgMid,
+        onSurface: AppColors.textOnDark,
+        error: Color(0xFFEF4444),
+        onError: Colors.white,
       ),
-
       textTheme: const TextTheme(
-        displayLarge: TextStyle(
-          fontFamily: 'SansSerif',
-          fontWeight: FontWeight.bold,
-          color: Color(0xFF183D3D),
+        headlineLarge: TextStyle(
+          fontSize: 28,
+          fontWeight: FontWeight.w800,
+          color: AppColors.textOnDark,
+          letterSpacing: -0.5,
+        ),
+        headlineMedium: TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.w700,
+          color: AppColors.textOnDark,
+          letterSpacing: -0.3,
+        ),
+        titleMedium: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: AppColors.textOnDark,
         ),
         bodyLarge: TextStyle(
-          fontFamily: 'SansSerif',
-          color: Color(0xFF333333),
+          fontSize: 15,
+          fontWeight: FontWeight.w400,
+          color: AppColors.textOnDark,
         ),
-        bodyMedium: TextStyle(
-          fontFamily: 'SansSerif',
-          color: Color(0xFF333333),
+        bodySmall: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
+          color: AppColors.textOnDarkDim,
+          letterSpacing: 0.2,
+        ),
+        labelSmall: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+          color: AppColors.textOnDark,
+          letterSpacing: 0.8,
         ),
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        centerTitle: true,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+        centerTitle: false,
         titleTextStyle: TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
+          color: AppColors.textOnDark,
+          fontSize: 22,
+          fontWeight: FontWeight.w800,
+          letterSpacing: -0.3,
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: AppColors.textOnDark),
+      ),
+      cardTheme: CardThemeData(
+        elevation: 0,
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(14)),
+        ),
+        margin: EdgeInsets.zero,
+      ),
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
       ),
     );
   }
 
-  /// Dark theme configuration (optional, for future use)
-  static ThemeData get darkTheme {
-    return ThemeData(
-      useMaterial3: true,
-      scaffoldBackgroundColor: const Color(0xFF121212),
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color(0xFF00BFA5),
-        brightness: Brightness.dark,
-      ),
-    );
-  }
+  static ThemeData get darkTheme => lightTheme;
 }
