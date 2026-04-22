@@ -311,17 +311,7 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
             ],
           ),
           
-          // FAB for actions (Power Up / Evolve) - Visual only
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: FloatingActionButton.extended(
-              onPressed: () {},
-              icon: const Icon(Icons.arrow_upward),
-              label: const Text('POWER UP'),
-              backgroundColor: Colors.green,
-            ),
-          ),
+          
         ],
       ),
     );
