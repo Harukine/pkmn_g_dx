@@ -1,0 +1,50 @@
+name: Pokemon Go Data Update
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'data/**' # Prevent infinite loop if we push data
+  schedule:
+    - cron: '0 0 * * 0' # Weekly on Sunday at midnight UTC
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to push changes to the repository
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: pip install requests
+
+      - name: Download Latest Game Master
+        run: python scripts/download_game_master.py
+
+      - name: Scrape Latest Icons
+        run: python scripts/icon_scraper.py
+
+      - name: Build Pokedex Data
+        run: python scripts/build_pokedex.py
+
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(data): auto-update pokemon go data"
+          file_pattern: "data/*.json"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
