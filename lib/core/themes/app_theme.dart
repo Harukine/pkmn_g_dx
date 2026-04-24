@@ -14,14 +14,14 @@ class AppColors {
   static const accentDark    = Color(0xFFF0A800);
 
   // ── Backgrounds ───────────────────────────────────────────
-  static const bgDark   = Color(0xFF1A1A2E); // deep navy
-  static const bgMid    = Color(0xFF16213E);
-  static const bgCard   = Color(0xFF0F3460);
+  static const bgDark   = Color(0xFF0A0A0F); // Deep near-black navy
+  static const bgMid    = Color(0xFF12121A); // Slightly lighter for grouping
+  static const bgCard   = Color(0xFF1C1C26); // Surface for cards
   static const bgSurface = Color(0xFFF7F7FA);
 
   // ── Text ──────────────────────────────────────────────────
-  static const textPrimary   = Color(0xFF1A1A2E);
-  static const textSecondary = Color(0xFF6B7280);
+  static const textPrimary   = Color(0xFFF5F5F7); // High contrast off-white
+  static const textSecondary = Color(0xFF8E8E93); // Medium contrast grey
   static const textOnDark    = Color(0xFFFFFFFF);
   static const textOnDarkDim = Color(0xFFB0B8C8);
 
@@ -96,16 +96,16 @@ class AppTheme {
         ),
         iconTheme: IconThemeData(color: AppColors.textOnDark),
       ),
-      cardTheme: CardThemeData(
+      cardTheme: const CardThemeData(
         elevation: 0,
-        color: Colors.white,
+        color: AppColors.bgCard,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(14)),
         ),
         margin: EdgeInsets.zero,
       ),
       bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.bgCard,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),

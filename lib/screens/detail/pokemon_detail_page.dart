@@ -28,6 +28,7 @@ class PokemonDetailPage extends StatefulWidget {
 
 class _PokemonDetailPageState extends State<PokemonDetailPage> {
   late PokemonForm _selectedForm;
+  bool _isShiny = false;
 
   @override
   void initState() {
@@ -83,24 +84,12 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
     final typeColor = TypeColors.getColorForType(_selectedForm.types.first);
 
     return Scaffold(
-      backgroundColor: typeColor,
+      backgroundColor: Color.alphaBlend(
+        typeColor.withOpacity(0.1),
+        Theme.of(context).scaffoldBackgroundColor,
+      ),
       body: Stack(
         children: [
-          // Background Gradient
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  typeColor,
-                  typeColor.withOpacity(0.6),
-                  Colors.white,
-                ],
-                stops: const [0.0, 0.4, 0.5],
-              ),
-            ),
-          ),
           
           // Content
           CustomScrollView(
@@ -113,6 +102,18 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 actions: [
+                  if (_selectedForm.shinyGoIconUrl != null)
+                    IconButton(
+                      icon: Icon(
+                        _isShiny ? Icons.auto_awesome : Icons.auto_awesome_outlined,
+                        color: _isShiny ? Colors.amber : Colors.white,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isShiny = !_isShiny;
+                        });
+                      },
+                    ),
                   IconButton(
                     icon: const Icon(Icons.star_border, color: Colors.white),
                     onPressed: () {
@@ -123,22 +124,31 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
               ),
               SliverToBoxAdapter(
                 child: SizedBox(
-                  height: 300,
+                  height: 380,
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
                       // CP Display
                       Positioned(
-                        top: 0,
+                        top: 10,
                         child: Column(
                           children: [
                             Text(
                               widget.entry.name,
-                              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),
+                            if (_selectedForm.familyId != null)
+                              Text(
+                                _selectedForm.familyId!,
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: Colors.white.withOpacity(0.7),
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
+                            const SizedBox(height: 8),
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -166,12 +176,12 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
                       ),
                       // Pokemon Image
                       Positioned(
-                        bottom: 20,
+                        bottom: 10,
                         child: Hero(
-                          tag: _selectedForm.formId ?? '',
+                          tag: '${_selectedForm.formId ?? ''}_${_isShiny ? 'shiny' : 'normal'}',
                           child: PokemonIcon(
-                            goIconUrl: _selectedForm.goIconUrl,
-                            size: 200,
+                            goIconUrl: _isShiny ? _selectedForm.shinyGoIconUrl : _selectedForm.goIconUrl,
+                            size: 220,
                           ),
                         ),
                       ),
@@ -181,9 +191,12 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
               ),
               SliverToBoxAdapter(
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                  decoration: BoxDecoration(
+                    color: Color.alphaBlend(
+                      typeColor.withOpacity(0.05),
+                      Theme.of(context).cardTheme.color!,
+                    ),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
                   ),
                   padding: const EdgeInsets.all(UIConstants.paddingMedium),
                   child: Column(
@@ -209,12 +222,43 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
                       const SizedBox(height: UIConstants.spacingLarge),
 
                       // Stats Bars
-                      _buildStatRow(context, 'Attack', _selectedForm.baseAttack, 300, Colors.red),
-                      _buildStatRow(context, 'Defense', _selectedForm.baseDefense, 300, Colors.blue),
-                      _buildStatRow(context, 'Stamina', _selectedForm.baseStamina, 300, Colors.green),
+                      _buildStatRow(context, 'Attack', _selectedForm.baseAttack, 300, const Color(0xFFFF5252)),
+                      _buildStatRow(context, 'Defense', _selectedForm.baseDefense, 300, const Color(0xFF448AFF)),
+                      _buildStatRow(context, 'Stamina', _selectedForm.baseStamina, 300, const Color(0xFF69F0AE)),
                       
                       const SizedBox(height: UIConstants.spacingLarge),
-                      const Divider(),
+
+                      if (_selectedForm.thirdMoveStardust != null || _selectedForm.thirdMoveCandy != null) ...[
+                        Row(
+                          children: [
+                            if (_selectedForm.thirdMoveStardust != null)
+                              Expanded(
+                                child: _buildInfoCard(
+                                  context, 
+                                  '3rd Move Stardust', 
+                                  '${_selectedForm.thirdMoveStardust}', 
+                                  Icons.auto_fix_high,
+                                  Colors.purple.shade300,
+                                ),
+                              ),
+                            if (_selectedForm.thirdMoveStardust != null && _selectedForm.thirdMoveCandy != null)
+                              const SizedBox(width: 8),
+                            if (_selectedForm.thirdMoveCandy != null)
+                              Expanded(
+                                child: _buildInfoCard(
+                                  context, 
+                                  '3rd Move Candy', 
+                                  '${_selectedForm.thirdMoveCandy}', 
+                                  Icons.circle,
+                                  Colors.orange.shade300,
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: UIConstants.spacingLarge),
+                      ],
+
+                      const Divider(color: Colors.white10),
                       const SizedBox(height: UIConstants.spacingMedium),
 
                       // Moves Section
@@ -271,16 +315,17 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
                       if (groupedForms.isNotEmpty) ...[
                         Text(
                           'Forms',
-                          style: Theme.of(context).textTheme.titleLarge,
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(height: UIConstants.spacingMedium),
                         for (final type in displayOrder)
                           if (groupedForms.containsKey(type) && groupedForms[type]!.isNotEmpty) ...[
                             Text(
-                              type.displayName,
+                              type.displayName.toUpperCase(),
                               style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                color: Colors.grey[600],
+                                color: Colors.white.withOpacity(0.5),
                                 fontWeight: FontWeight.bold,
+                                letterSpacing: 1.1,
                               ),
                             ),
                             const SizedBox(height: UIConstants.spacingSmall),
@@ -319,46 +364,103 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
 
   Widget _buildStatRow(BuildContext context, String label, int value, int max, Color color) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
           SizedBox(
-            width: 70,
+            width: 75,
             child: Text(
               label,
-              style: const TextStyle(fontWeight: FontWeight.w500),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: Colors.white.withOpacity(0.8),
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           Expanded(
             child: Stack(
               children: [
                 Container(
-                  height: 12,
+                  height: 10,
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(6),
+                    color: Colors.white.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(5),
                   ),
                 ),
                 FractionallySizedBox(
                   widthFactor: (value / max).clamp(0.0, 1.0),
                   child: Container(
-                    height: 12,
+                    height: 10,
                     decoration: BoxDecoration(
-                      color: color,
-                      borderRadius: BorderRadius.circular(6),
+                      gradient: LinearGradient(
+                        colors: [
+                          color.withOpacity(0.7),
+                          color,
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: color.withOpacity(0.3),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 16),
           SizedBox(
-            width: 40,
+            width: 35,
             child: Text(
               '$value',
               textAlign: TextAlign.end,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoCard(BuildContext context, String label, String value, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.03),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withOpacity(0.05)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 14, color: color),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.white.withOpacity(0.5),
+                  fontSize: 10,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
             ),
           ),
         ],

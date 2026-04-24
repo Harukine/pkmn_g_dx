@@ -44,9 +44,11 @@ class MovesSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          title,
+          title.toUpperCase(),
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: Theme.of(context).colorScheme.secondary,
+                color: Colors.white.withOpacity(0.5),
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.1,
               ),
         ),
         const SizedBox(height: UIConstants.spacingSmall),
@@ -60,24 +62,41 @@ class MovesSection extends StatelessWidget {
                 ? TypeColors.getColorForType(moveType)
                 : Colors.grey;
             
-            return Chip(
-              label: Text(
-                move.replaceAll('_FAST', '')
-                    .replaceAll('_', ' ')
-                    .toLowerCase().split(' ')
-                    .map((word) => word.isNotEmpty ? '${word[0].toUpperCase()}${word.substring(1)}' : '')
-                    .join(' '),
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: isElite 
+                    ? Colors.amber.withOpacity(0.15)
+                    : typeColor.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: isElite 
+                      ? Colors.amber.withOpacity(0.3)
+                      : typeColor.withOpacity(0.3),
+                  width: 1,
                 ),
               ),
-              backgroundColor: isElite 
-                  ? Colors.amber.shade800 
-                  : typeColor,
-              visualDensity: VisualDensity.compact,
-              padding: EdgeInsets.zero,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (isElite) ...[
+                    const Icon(Icons.star, size: 10, color: Colors.amber),
+                    const SizedBox(width: 4),
+                  ],
+                  Text(
+                    move.replaceAll('_FAST', '')
+                        .replaceAll('_', ' ')
+                        .toLowerCase().split(' ')
+                        .map((word) => word.isNotEmpty ? '${word[0].toUpperCase()}${word.substring(1)}' : '')
+                        .join(' '),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: isElite ? Colors.amber : Colors.white.withOpacity(0.9),
+                      fontWeight: isElite ? FontWeight.bold : FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
             );
           }).toList(),
         ),

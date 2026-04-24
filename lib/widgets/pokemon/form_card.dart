@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../models/pokemon_form.dart';
 import '../common/pokemon_icon.dart';
-import '../common/pokemon_icon.dart';
 
 /// Card widget to display a Pokemon form variant
 class FormCard extends StatelessWidget {
@@ -34,12 +33,16 @@ class FormCard extends StatelessWidget {
         width: 100,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: isSelected ? Theme.of(context).colorScheme.primary.withOpacity(0.1) : Colors.white,
+          color: isSelected 
+              ? Theme.of(context).colorScheme.primary.withOpacity(0.2) 
+              : Colors.white.withOpacity(0.03),
           border: Border.all(
-            color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey[300]!,
+            color: isSelected 
+                ? Theme.of(context).colorScheme.primary 
+                : Colors.white.withOpacity(0.1),
             width: 2,
           ),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
           children: [
@@ -52,9 +55,11 @@ class FormCard extends StatelessWidget {
               label,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                color: isSelected ? Theme.of(context).colorScheme.primary : Colors.black87,
+                fontSize: 11,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                color: isSelected 
+                    ? Theme.of(context).colorScheme.primary 
+                    : Colors.white.withOpacity(0.7),
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

@@ -72,7 +72,7 @@ class _PokemonListHeaderState extends State<PokemonListHeader>
         color: AppColors.bgDark,
         border: Border(
           bottom: BorderSide(
-            color: Colors.white.withOpacity(0.06),
+            color: Theme.of(context).dividerColor.withOpacity(0.1),
             width: 1,
           ),
         ),
@@ -123,7 +123,7 @@ class _PokemonListHeaderState extends State<PokemonListHeader>
             height: 40,
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.08),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(

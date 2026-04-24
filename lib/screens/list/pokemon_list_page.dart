@@ -83,7 +83,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
   void _showSortMenu() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
@@ -128,7 +128,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
         label,
         style: TextStyle(
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          color: isSelected ? AppColors.pokedexRed : AppColors.textPrimary,
+          color: isSelected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface,
         ),
       ),
       trailing: isSelected ? Icon(trailingIcon, color: AppColors.pokedexRed) : null,

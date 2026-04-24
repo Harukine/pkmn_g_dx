@@ -63,10 +63,10 @@ class PokemonCard extends StatelessWidget {
                     children: [
                       Text(
                         entry.name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.textPrimary,
+                          color: Theme.of(context).colorScheme.onSurface,
                           height: 1.2,
                         ),
                         textAlign: TextAlign.center,
@@ -76,10 +76,10 @@ class PokemonCard extends StatelessWidget {
                       if (entry.dexNumber != null)
                         Text(
                           '#${entry.dexNumber!.toString().padLeft(4, '0')}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 9,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textSecondary,
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                             letterSpacing: 0.3,
                           ),
                         ),
@@ -97,13 +97,13 @@ class PokemonCard extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(2),
                   decoration: BoxDecoration(
-                    color: Colors.purple.shade50,
+                    color: Colors.purple.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: const Icon(
                     Icons.checkroom_rounded,
                     size: 11,
-                    color: Colors.purple,
+                    color: Colors.purpleAccent,
                   ),
                 ),
               ),
