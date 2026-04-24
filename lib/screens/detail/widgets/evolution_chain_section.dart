@@ -23,8 +23,12 @@ class EvolutionChainSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Evolutions',
-          style: Theme.of(context).textTheme.titleMedium,
+          'Evolutions'.toUpperCase(),
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: Colors.white.withOpacity(0.5),
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.1,
+              ),
         ),
         const SizedBox(height: UIConstants.spacingMedium),
         ...form.nextEvolutions.map((evo) {
@@ -56,17 +60,31 @@ class EvolutionChainSection extends StatelessWidget {
                     ),
                   ),
                   if (evo.candyCost > 0)
-                    Chip(
-                      label: Text('${evo.candyCost} Candy'),
-                      visualDensity: VisualDensity.compact,
-                      backgroundColor: Colors.orange.shade100,
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: Colors.orange.withOpacity(0.2)),
+                      ),
+                      child: Text(
+                        '${evo.candyCost} Candy',
+                        style: const TextStyle(color: Colors.orange, fontSize: 10, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   if (evo.itemRequirement != null) ...[
-                    const SizedBox(width: 4),
-                    Chip(
-                      label: Text(evo.itemRequirement!.replaceAll('ITEM_', '').replaceAll('_', ' ').toLowerCase()),
-                      visualDensity: VisualDensity.compact,
-                      backgroundColor: Colors.blue.shade100,
+                    const SizedBox(width: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: Colors.blue.withOpacity(0.2)),
+                      ),
+                      child: Text(
+                        evo.itemRequirement!.replaceAll('ITEM_', '').replaceAll('_', ' ').toLowerCase(),
+                        style: const TextStyle(color: Colors.blue, fontSize: 10, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ],

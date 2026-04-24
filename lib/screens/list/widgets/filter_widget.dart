@@ -77,9 +77,9 @@ class _FilterWidgetState extends State<FilterWidget> {
       maxChildSize: 0.95,
       builder: (_, controller) {
         return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardTheme.color,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
             children: [
@@ -92,9 +92,13 @@ class _FilterWidgetState extends State<FilterWidget> {
                       onPressed: _reset,
                       child: const Text('Reset'),
                     ),
-                    const Text(
+                    Text(
                       'Filters',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 20, 
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                     TextButton(
                       onPressed: () {
@@ -130,7 +134,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                           selected: isSelected,
                           selectedColor: typeColor,
                           checkmarkColor: Colors.white,
-                          backgroundColor: Colors.white,
+                          backgroundColor: Theme.of(context).cardTheme.color,
                           side: BorderSide(color: typeColor),
                           onSelected: (selected) {
                             setState(() {
@@ -174,16 +178,16 @@ class _FilterWidgetState extends State<FilterWidget> {
                                       end: Alignment.bottomRight,
                                     )
                                   : null,
-                              color: isSelected ? null : Colors.white,
+                              color: isSelected ? null : Theme.of(context).cardTheme.color,
                               borderRadius: BorderRadius.circular(4),
                               border: isSelected
                                   ? null
-                                  : Border.all(color: Colors.grey.shade400),
+                                  : Border.all(color: Theme.of(context).dividerColor),
                             ),
                             child: Text(
                               'Gen $gen',
                               style: TextStyle(
-                                color: isSelected ? Colors.white : Colors.black87,
+                                color: isSelected ? Colors.white : Theme.of(context).colorScheme.onSurface,
                                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                               ),
                             ),
@@ -231,7 +235,11 @@ class _FilterWidgetState extends State<FilterWidget> {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: 16, 
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
       ),
     );
   }
@@ -240,7 +248,10 @@ class _FilterWidgetState extends State<FilterWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('$label: ${values.start.round()} - ${values.end.round()}'),
+        Text(
+          '$label: ${values.start.round()} - ${values.end.round()}',
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+        ),
         RangeSlider(
           values: values,
           min: 0,
