@@ -10,7 +10,7 @@ void main() {
   late List<PokemonEntry> testData;
 
   setUp(() {
-    service = PokemonService.instance;
+    service = PokemonService();
     testData = [
       const PokemonEntry(
         basePokemonId: 'BULBASAUR',
@@ -35,8 +35,10 @@ void main() {
             baseStamina: 128,
             dexNumber: 1,
             goIconUrl: null,
+            maxCp: 1115,
           ),
         ],
+        maxCp: 1115,
       ),
       const PokemonEntry(
         basePokemonId: 'CHARMANDER',
@@ -61,8 +63,10 @@ void main() {
             baseStamina: 118,
             dexNumber: 4,
             goIconUrl: null,
+            maxCp: 980,
           ),
         ],
+        maxCp: 980,
       ),
       const PokemonEntry(
         basePokemonId: 'MEWTWO',
@@ -87,6 +91,7 @@ void main() {
             baseStamina: 214,
             dexNumber: 150,
             goIconUrl: null,
+            maxCp: 4178,
           ),
           PokemonForm(
             pokemonId: 'MEWTWO',
@@ -99,8 +104,10 @@ void main() {
             baseStamina: 214,
             dexNumber: 150,
             goIconUrl: null,
+            maxCp: 3187,
           ),
         ],
+        maxCp: 4178,
       ),
     ];
   });

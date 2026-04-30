@@ -2,7 +2,7 @@
 import requests
 from pathlib import Path
 
-GO_ICON_BASE = "https://raw.githubusercontent.com/PokeMiners/pogo_assets/master/Images/Pokemon/Addressable%20Assets/"
+GO_ICON_BASE = "https://raw.githubusercontent.com/PokeMiners/pogo_assets/master/Images/Pokemon%20-%20256x256/Addressable%20Assets/"
 
 class IconResolver:
     """Resolves Pokemon icon URLs from PokeMiners repository."""

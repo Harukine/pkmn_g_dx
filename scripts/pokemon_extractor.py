@@ -19,6 +19,7 @@ import json
 import re
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional
+import enrichment_helper
 
 # Paths
 DATA_DIR = Path("data")
@@ -27,7 +28,7 @@ GAME_MASTER_PATH = DATA_DIR / "latest_game_master.json"
 OUTPUT_PATH = DATA_DIR / "pokemon_go_slim.json"
 
 # Icon base URL
-GO_ICON_BASE = "https://raw.githubusercontent.com/PokeMiners/pogo_assets/master/Images/Pokemon/Addressable%20Assets/"
+GO_ICON_BASE = "https://raw.githubusercontent.com/PokeMiners/pogo_assets/master/Images/Pokemon%20-%20256x256/Addressable%20Assets/"
 
 
 def load_icon_manifest() -> Dict:
@@ -172,6 +173,40 @@ def build_pokemon_lookup(game_master: List[Dict]) -> Dict[int, Dict[str, Dict]]:
         type2 = type2_raw.replace('POKEMON_TYPE_', '').title() if type2_raw else None
         types = [t for t in [type1, type2] if t]
         
+        # Extract class info
+        pokemon_class = pokemon_settings.get('pokemonClass')
+        if pokemon_class == 'POKEMON_CLASS_MYTHIC':
+            pokemon_class = 'POKEMON_CLASS_MYTHICAL'
+            
+        # Extract form changes
+        raw_form_changes = pokemon_settings.get('formChange', [])
+        form_changes = []
+        for change in raw_form_changes:
+            c = {
+                'availableForm': change.get('availableForm', []),
+                'candyCost': change.get('candyCost'),
+                'stardustCost': change.get('stardustCost'),
+                'item': change.get('item'),
+                'itemCostCount': change.get('itemCostCount'),
+            }
+            
+            # Flatten move reassignment if it exists
+            move_reassignment = change.get('moveReassignment', {})
+            replacement_moves = []
+            
+            # Check cinematic moves
+            for m in move_reassignment.get('cinematicMoves', []):
+                replacement_moves.extend(m.get('replacementMoves', []))
+            
+            # Check quick moves
+            for m in move_reassignment.get('quickMoves', []):
+                replacement_moves.extend(m.get('replacementMoves', []))
+                
+            if replacement_moves:
+                c['replacementMoves'] = replacement_moves
+                
+            form_changes.append(c)
+
         entry = {
             'pokemonId': pokemon_id,
             'baseName': base_name_id.replace('_', ' ').title(),
@@ -180,6 +215,8 @@ def build_pokemon_lookup(game_master: List[Dict]) -> Dict[int, Dict[str, Dict]]:
             'baseDefense': stats.get('baseDefense'),
             'baseStamina': stats.get('baseStamina'),
             'types': types,
+            'pokemonClass': pokemon_class,
+            'formChanges': form_changes,
             'familyId': str(pokemon_settings.get('familyId', '')).replace('FAMILY_', ''),
             'quickMoves': pokemon_settings.get('quickMoves', []),
             'cinematicMoves': pokemon_settings.get('cinematicMoves', []),
@@ -280,6 +317,9 @@ def extract_all_forms() -> List[Dict]:
     
     print("Building Pokemon lookup...")
     pokemon_lookup = build_pokemon_lookup(game_master)
+    
+    print("Loading Mechanical Data for Enrichment...")
+    rich_lookup = enrichment_helper.load_pokemon_data(DATA_DIR)
     
     print(f"Found {len(pokemon_lookup)} Pokemon in Game Master")
     
@@ -403,6 +443,8 @@ def extract_all_forms() -> List[Dict]:
             'baseDefense': pokemon_data['baseDefense'],
             'baseStamina': pokemon_data['baseStamina'],
             'types': pokemon_data['types'],
+            'pokemonClass': pokemon_data.get('pokemonClass'),
+            'formChanges': pokemon_data.get('formChanges', []),
             'dexNumber': dex,
             'goIconUrl': icon_url,
             'shinyGoIconUrl': shiny_icon_url,
@@ -417,6 +459,16 @@ def extract_all_forms() -> List[Dict]:
                 'thirdMoveCandy': None,
             }
         }
+        
+        # Include formChanges from the base form to catch move reassignments
+        if forms_data.get('NORMAL'):
+            base_changes = forms_data['NORMAL'].get('formChanges', [])
+            current_changes = form_entry.get('formChanges', [])
+            # Combine without duplicates if possible, or just extend
+            form_entry['formChanges'] = current_changes + base_changes
+
+        # Apply mechanical data enrichment
+        form_entry = enrichment_helper.enrich_form(form_entry, rich_lookup)
         
         # Check if form already exists
         forms_list = grouped[base_id]['forms']
@@ -476,6 +528,8 @@ def extract_all_forms() -> List[Dict]:
                 'baseDefense': pokemon_data['baseDefense'],
                 'baseStamina': pokemon_data['baseStamina'],
                 'types': pokemon_data['types'],
+                'pokemonClass': pokemon_data.get('pokemonClass'),
+                'formChanges': pokemon_data.get('formChanges', []),
                 'dexNumber': dex,
                 'goIconUrl': base_icon_url,
                 'shinyGoIconUrl': None, 
@@ -490,6 +544,10 @@ def extract_all_forms() -> List[Dict]:
                     'thirdMoveCandy': None,
                 }
             }
+            
+            # Apply mechanical data enrichment
+            base_form = enrichment_helper.enrich_form(base_form, rich_lookup)
+            
             forms.append(base_form)
             added_base_count += 1
             
@@ -547,6 +605,8 @@ def extract_all_forms() -> List[Dict]:
                 'baseDefense': pokemon_data['baseDefense'],
                 'baseStamina': pokemon_data['baseStamina'],
                 'types': pokemon_data['types'],
+                'pokemonClass': pokemon_data.get('pokemonClass'),
+                'formChanges': pokemon_data.get('formChanges', []),
                 'dexNumber': dex_number,
                 'goIconUrl': base_icon_url,
                 'shinyGoIconUrl': None,
@@ -561,6 +621,10 @@ def extract_all_forms() -> List[Dict]:
                     'thirdMoveCandy': None,
                 }
             }
+            
+            # Apply mechanical data enrichment
+            base_form = enrichment_helper.enrich_form(base_form, rich_lookup)
+            
             grouped[base_id]['forms'].append(base_form)
         
         # Process tempEvoOverrides
@@ -611,6 +675,7 @@ def extract_all_forms() -> List[Dict]:
                 'baseDefense': evo_stats.get('baseDefense'),
                 'baseStamina': evo_stats.get('baseStamina'),
                 'types': evo_types,
+                'pokemonClass': pokemon_data.get('pokemonClass'), # Megas share class usually
                 'dexNumber': dex_number,
                 'goIconUrl': icon_url,
                 'shinyGoIconUrl': None,
@@ -625,6 +690,9 @@ def extract_all_forms() -> List[Dict]:
                     'thirdMoveCandy': None,
                 }
             }
+            
+            # Apply mechanical data enrichment
+            mega_entry = enrichment_helper.enrich_form(mega_entry, rich_lookup)
             
             # Add if doesn't exist
             forms_list = grouped[base_id]['forms']

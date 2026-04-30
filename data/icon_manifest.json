@@ -79,6 +79,14 @@
     "pm105.fALOLA.icon.png",
     "pm105.fALOLA.s.icon.png"
   ],
+  "10:FGOFEST_2026": [
+    "pm10.fGOFEST_2026.icon.png",
+    "pm10.fGOFEST_2026.s.icon.png"
+  ],
+  "10:GOFEST_2026": [
+    "pm10.fGOFEST_2026.icon.png",
+    "pm10.fGOFEST_2026.s.icon.png"
+  ],
   "110:FGALARIAN": [
     "pm110.fGALARIAN.icon.png",
     "pm110.fGALARIAN.s.icon.png"
@@ -202,6 +210,22 @@
   "131:SPRING_2023_MYSTIC": [
     "pm131.cSPRING_2023_MYSTIC.icon.png",
     "pm131.cSPRING_2023_MYSTIC.s.icon.png"
+  ],
+  "132:FSPRING_2026_A": [
+    "pm132.fSPRING_2026_A.icon.png",
+    "pm132.fSPRING_2026_A.s.icon.png"
+  ],
+  "132:FSPRING_2026_B": [
+    "pm132.fSPRING_2026_B.icon.png",
+    "pm132.fSPRING_2026_B.s.icon.png"
+  ],
+  "132:SPRING_2026_A": [
+    "pm132.fSPRING_2026_A.icon.png",
+    "pm132.fSPRING_2026_A.s.icon.png"
+  ],
+  "132:SPRING_2026_B": [
+    "pm132.fSPRING_2026_B.icon.png",
+    "pm132.fSPRING_2026_B.s.icon.png"
   ],
   "133:CHOLIDAY_2022": [
     "pm133.cHOLIDAY_2022.g2.icon.png",
@@ -463,6 +487,14 @@
     "pm149.cFALL_2023.icon.png",
     "pm149.cFALL_2023.s.icon.png"
   ],
+  "149:FMEGA": [
+    "pm149.fMEGA.icon.png",
+    "pm149.fMEGA.s.icon.png"
+  ],
+  "149:MEGA": [
+    "pm149.fMEGA.icon.png",
+    "pm149.fMEGA.s.icon.png"
+  ],
   "150:A": [
     "pm150.fA.icon.png",
     "pm150.fA.s.icon.png"
@@ -474,6 +506,22 @@
   "150:FA": [
     "pm150.fA.icon.png",
     "pm150.fA.s.icon.png"
+  ],
+  "150:FMEGA_X": [
+    "pm150.fMEGA_X.icon.png",
+    "pm150.fMEGA_X.s.icon.png"
+  ],
+  "150:FMEGA_Y": [
+    "pm150.fMEGA_Y.icon.png",
+    "pm150.fMEGA_Y.s.icon.png"
+  ],
+  "150:MEGA_X": [
+    "pm150.fMEGA_X.icon.png",
+    "pm150.fMEGA_X.s.icon.png"
+  ],
+  "150:MEGA_Y": [
+    "pm150.fMEGA_Y.icon.png",
+    "pm150.fMEGA_Y.s.icon.png"
   ],
   "150:ONE_YEAR_ANNIVERSARY": [
     "pm150.cONE_YEAR_ANNIVERSARY.icon.png",
@@ -614,6 +662,18 @@
   "181:MEGA": [
     "pm181.fMEGA.icon.png",
     "pm181.fMEGA.s.icon.png"
+  ],
+  "185:FWINTER_2025": [
+    "pm185.fWINTER_2025.g2.icon.png",
+    "pm185.fWINTER_2025.g2.s.icon.png",
+    "pm185.fWINTER_2025.icon.png",
+    "pm185.fWINTER_2025.s.icon.png"
+  ],
+  "185:WINTER_2025": [
+    "pm185.fWINTER_2025.g2.icon.png",
+    "pm185.fWINTER_2025.g2.s.icon.png",
+    "pm185.fWINTER_2025.icon.png",
+    "pm185.fWINTER_2025.s.icon.png"
   ],
   "18:FMEGA": [
     "pm18.fMEGA.icon.png",
@@ -1095,13 +1155,41 @@
     "pm215.fHISUIAN.icon.png",
     "pm215.fHISUIAN.s.icon.png"
   ],
+  "216:CHALLOWEEN_2025": [
+    "pm216.cHALLOWEEN_2025.icon.png",
+    "pm216.cHALLOWEEN_2025.s.icon.png"
+  ],
+  "216:HALLOWEEN_2025": [
+    "pm216.cHALLOWEEN_2025.icon.png",
+    "pm216.cHALLOWEEN_2025.s.icon.png"
+  ],
+  "217:CHALLOWEEN_2025": [
+    "pm217.cHALLOWEEN_2025.g2.icon.png",
+    "pm217.cHALLOWEEN_2025.g2.s.icon.png",
+    "pm217.cHALLOWEEN_2025.icon.png",
+    "pm217.cHALLOWEEN_2025.s.icon.png"
+  ],
+  "217:HALLOWEEN_2025": [
+    "pm217.cHALLOWEEN_2025.g2.icon.png",
+    "pm217.cHALLOWEEN_2025.g2.s.icon.png",
+    "pm217.cHALLOWEEN_2025.icon.png",
+    "pm217.cHALLOWEEN_2025.s.icon.png"
+  ],
   "222:FGALARIAN": [
     "pm222.fGALARIAN.icon.png",
     "pm222.fGALARIAN.s.icon.png"
   ],
+  "222:FSPRING_2026": [
+    "pm222.fSPRING_2026.icon.png",
+    "pm222.fSPRING_2026.s.icon.png"
+  ],
   "222:GALARIAN": [
     "pm222.fGALARIAN.icon.png",
     "pm222.fGALARIAN.s.icon.png"
+  ],
+  "222:SPRING_2026": [
+    "pm222.fSPRING_2026.icon.png",
+    "pm222.fSPRING_2026.s.icon.png"
   ],
   "225:FWINTER_2020": [
     "pm225.fWINTER_2020.icon.png",
@@ -1222,6 +1310,12 @@
     "pm25.cAPRIL_2020_NOEVOLVE.g2.s.icon.png",
     "pm25.cAPRIL_2020_NOEVOLVE.icon.png",
     "pm25.cAPRIL_2020_NOEVOLVE.s.icon.png"
+  ],
+  "25:BB_2026": [
+    "pm25.fBB_2026.g2.icon.png",
+    "pm25.fBB_2026.g2.s.icon.png",
+    "pm25.fBB_2026.icon.png",
+    "pm25.fBB_2026.s.icon.png"
   ],
   "25:CANNIVERSARY": [
     "pm25.cANNIVERSARY.g2.icon.png",
@@ -1483,6 +1577,12 @@
     "pm25.cFALL_2023_NOEVOLVE.icon.png",
     "pm25.cFALL_2023_NOEVOLVE.s.icon.png"
   ],
+  "25:FBB_2026": [
+    "pm25.fBB_2026.g2.icon.png",
+    "pm25.fBB_2026.g2.s.icon.png",
+    "pm25.fBB_2026.icon.png",
+    "pm25.fBB_2026.s.icon.png"
+  ],
   "25:FCOPY_2019": [
     "pm25.fCOPY_2019.g2.icon.png",
     "pm25.fCOPY_2019.g2.s.icon.png",
@@ -1551,6 +1651,16 @@
     "pm25.fFLYING_OKINAWA.icon.png",
     "pm25.fFLYING_OKINAWA.s.icon.png"
   ],
+  "25:FFOSSIL_2026": [
+    "pm25.fFOSSIL_2026.g2.icon.png",
+    "pm25.fFOSSIL_2026.g2.s.icon.png",
+    "pm25.fFOSSIL_2026.icon.png",
+    "pm25.fFOSSIL_2026.s.icon.png"
+  ],
+  "25:FGIGANTAMAX": [
+    "pm25.fGIGANTAMAX.icon.png",
+    "pm25.fGIGANTAMAX.s.icon.png"
+  ],
   "25:FGOFEST_2022": [
     "pm25.fGOFEST_2022.g2.icon.png",
     "pm25.fGOFEST_2022.g2.s.icon.png",
@@ -1605,6 +1715,24 @@
     "pm25.fGOFEST_2025_MONOCLE_YELLOW.icon.png",
     "pm25.fGOFEST_2025_MONOCLE_YELLOW.s.icon.png"
   ],
+  "25:FGOFEST_2026_CAP_BLUE": [
+    "pm25.fGOFEST_2026_CAP_BLUE.g2.icon.png",
+    "pm25.fGOFEST_2026_CAP_BLUE.g2.s.icon.png",
+    "pm25.fGOFEST_2026_CAP_BLUE.icon.png",
+    "pm25.fGOFEST_2026_CAP_BLUE.s.icon.png"
+  ],
+  "25:FGOFEST_2026_CAP_RED": [
+    "pm25.fGOFEST_2026_CAP_RED.g2.icon.png",
+    "pm25.fGOFEST_2026_CAP_RED.g2.s.icon.png",
+    "pm25.fGOFEST_2026_CAP_RED.icon.png",
+    "pm25.fGOFEST_2026_CAP_RED.s.icon.png"
+  ],
+  "25:FGOFEST_2026_CAP_YELLOW": [
+    "pm25.fGOFEST_2026_CAP_YELLOW.g2.icon.png",
+    "pm25.fGOFEST_2026_CAP_YELLOW.g2.s.icon.png",
+    "pm25.fGOFEST_2026_CAP_YELLOW.icon.png",
+    "pm25.fGOFEST_2026_CAP_YELLOW.s.icon.png"
+  ],
   "25:FGOTOUR_2024_A": [
     "pm25.fGOTOUR_2024_A.g2.icon.png",
     "pm25.fGOTOUR_2024_A.g2.s.icon.png",
@@ -1652,6 +1780,42 @@
     "pm25.fGOTOUR_2025_B_02.g2.s.icon.png",
     "pm25.fGOTOUR_2025_B_02.icon.png",
     "pm25.fGOTOUR_2025_B_02.s.icon.png"
+  ],
+  "25:FGOTOUR_2026_A": [
+    "pm25.fGOTOUR_2026_A.g2.icon.png",
+    "pm25.fGOTOUR_2026_A.g2.s.icon.png",
+    "pm25.fGOTOUR_2026_A.icon.png",
+    "pm25.fGOTOUR_2026_A.s.icon.png"
+  ],
+  "25:FGOTOUR_2026_A_02": [
+    "pm25.fGOTOUR_2026_A_02.g2.icon.png",
+    "pm25.fGOTOUR_2026_A_02.g2.s.icon.png",
+    "pm25.fGOTOUR_2026_A_02.icon.png",
+    "pm25.fGOTOUR_2026_A_02.s.icon.png"
+  ],
+  "25:FGOTOUR_2026_B": [
+    "pm25.fGOTOUR_2026_B.g2.icon.png",
+    "pm25.fGOTOUR_2026_B.g2.s.icon.png",
+    "pm25.fGOTOUR_2026_B.icon.png",
+    "pm25.fGOTOUR_2026_B.s.icon.png"
+  ],
+  "25:FGOTOUR_2026_B_02": [
+    "pm25.fGOTOUR_2026_B_02.g2.icon.png",
+    "pm25.fGOTOUR_2026_B_02.g2.s.icon.png",
+    "pm25.fGOTOUR_2026_B_02.icon.png",
+    "pm25.fGOTOUR_2026_B_02.s.icon.png"
+  ],
+  "25:FGOTOUR_2026_C": [
+    "pm25.fGOTOUR_2026_C.g2.icon.png",
+    "pm25.fGOTOUR_2026_C.g2.s.icon.png",
+    "pm25.fGOTOUR_2026_C.icon.png",
+    "pm25.fGOTOUR_2026_C.s.icon.png"
+  ],
+  "25:FGOTOUR_2026_C_02": [
+    "pm25.fGOTOUR_2026_C_02.g2.icon.png",
+    "pm25.fGOTOUR_2026_C_02.g2.s.icon.png",
+    "pm25.fGOTOUR_2026_C_02.icon.png",
+    "pm25.fGOTOUR_2026_C_02.s.icon.png"
   ],
   "25:FHORIZONS": [
     "pm25.fHORIZONS.g2.icon.png",
@@ -1711,6 +1875,12 @@
     "pm25.fFLYING_OKINAWA.icon.png",
     "pm25.fFLYING_OKINAWA.s.icon.png"
   ],
+  "25:FOSSIL_2026": [
+    "pm25.fFOSSIL_2026.g2.icon.png",
+    "pm25.fFOSSIL_2026.g2.s.icon.png",
+    "pm25.fFOSSIL_2026.icon.png",
+    "pm25.fFOSSIL_2026.s.icon.png"
+  ],
   "25:FPOP_STAR": [
     "pm25.fPOP_STAR.icon.png",
     "pm25.fPOP_STAR.s.icon.png"
@@ -1767,6 +1937,12 @@
     "pm25.fTSHIRT_03.icon.png",
     "pm25.fTSHIRT_03.s.icon.png"
   ],
+  "25:FVISOR_2026": [
+    "pm25.fVISOR_2026.g2.icon.png",
+    "pm25.fVISOR_2026.g2.s.icon.png",
+    "pm25.fVISOR_2026.icon.png",
+    "pm25.fVISOR_2026.s.icon.png"
+  ],
   "25:FVS_2019": [
     "pm25.fVS_2019.icon.png",
     "pm25.fVS_2019.s.icon.png"
@@ -1800,6 +1976,10 @@
     "pm25.fWINTER_2020.g2.s.icon.png",
     "pm25.fWINTER_2020.icon.png",
     "pm25.fWINTER_2020.s.icon.png"
+  ],
+  "25:GIGANTAMAX": [
+    "pm25.fGIGANTAMAX.icon.png",
+    "pm25.fGIGANTAMAX.s.icon.png"
   ],
   "25:GOFEST_2021_NOEVOLVE": [
     "pm25.cGOFEST_2021_NOEVOLVE.g2.icon.png",
@@ -1866,6 +2046,24 @@
     "pm25.fGOFEST_2025_MONOCLE_YELLOW.g2.s.icon.png",
     "pm25.fGOFEST_2025_MONOCLE_YELLOW.icon.png",
     "pm25.fGOFEST_2025_MONOCLE_YELLOW.s.icon.png"
+  ],
+  "25:GOFEST_2026_CAP_BLUE": [
+    "pm25.fGOFEST_2026_CAP_BLUE.g2.icon.png",
+    "pm25.fGOFEST_2026_CAP_BLUE.g2.s.icon.png",
+    "pm25.fGOFEST_2026_CAP_BLUE.icon.png",
+    "pm25.fGOFEST_2026_CAP_BLUE.s.icon.png"
+  ],
+  "25:GOFEST_2026_CAP_RED": [
+    "pm25.fGOFEST_2026_CAP_RED.g2.icon.png",
+    "pm25.fGOFEST_2026_CAP_RED.g2.s.icon.png",
+    "pm25.fGOFEST_2026_CAP_RED.icon.png",
+    "pm25.fGOFEST_2026_CAP_RED.s.icon.png"
+  ],
+  "25:GOFEST_2026_CAP_YELLOW": [
+    "pm25.fGOFEST_2026_CAP_YELLOW.g2.icon.png",
+    "pm25.fGOFEST_2026_CAP_YELLOW.g2.s.icon.png",
+    "pm25.fGOFEST_2026_CAP_YELLOW.icon.png",
+    "pm25.fGOFEST_2026_CAP_YELLOW.s.icon.png"
   ],
   "25:GOTOUR_2023_BANDANA": [
     "pm25.cGOTOUR_2023_BANDANA.g2.icon.png",
@@ -1938,6 +2136,42 @@
     "pm25.fGOTOUR_2025_B_02.g2.s.icon.png",
     "pm25.fGOTOUR_2025_B_02.icon.png",
     "pm25.fGOTOUR_2025_B_02.s.icon.png"
+  ],
+  "25:GOTOUR_2026_A": [
+    "pm25.fGOTOUR_2026_A.g2.icon.png",
+    "pm25.fGOTOUR_2026_A.g2.s.icon.png",
+    "pm25.fGOTOUR_2026_A.icon.png",
+    "pm25.fGOTOUR_2026_A.s.icon.png"
+  ],
+  "25:GOTOUR_2026_A_02": [
+    "pm25.fGOTOUR_2026_A_02.g2.icon.png",
+    "pm25.fGOTOUR_2026_A_02.g2.s.icon.png",
+    "pm25.fGOTOUR_2026_A_02.icon.png",
+    "pm25.fGOTOUR_2026_A_02.s.icon.png"
+  ],
+  "25:GOTOUR_2026_B": [
+    "pm25.fGOTOUR_2026_B.g2.icon.png",
+    "pm25.fGOTOUR_2026_B.g2.s.icon.png",
+    "pm25.fGOTOUR_2026_B.icon.png",
+    "pm25.fGOTOUR_2026_B.s.icon.png"
+  ],
+  "25:GOTOUR_2026_B_02": [
+    "pm25.fGOTOUR_2026_B_02.g2.icon.png",
+    "pm25.fGOTOUR_2026_B_02.g2.s.icon.png",
+    "pm25.fGOTOUR_2026_B_02.icon.png",
+    "pm25.fGOTOUR_2026_B_02.s.icon.png"
+  ],
+  "25:GOTOUR_2026_C": [
+    "pm25.fGOTOUR_2026_C.g2.icon.png",
+    "pm25.fGOTOUR_2026_C.g2.s.icon.png",
+    "pm25.fGOTOUR_2026_C.icon.png",
+    "pm25.fGOTOUR_2026_C.s.icon.png"
+  ],
+  "25:GOTOUR_2026_C_02": [
+    "pm25.fGOTOUR_2026_C_02.g2.icon.png",
+    "pm25.fGOTOUR_2026_C_02.g2.s.icon.png",
+    "pm25.fGOTOUR_2026_C_02.icon.png",
+    "pm25.fGOTOUR_2026_C_02.s.icon.png"
   ],
   "25:HALLOWEEN_2017": [
     "pm25.cHALLOWEEN_2017.g2.icon.png",
@@ -2130,6 +2364,12 @@
     "pm25.fTSHIRT_03.g2.s.icon.png",
     "pm25.fTSHIRT_03.icon.png",
     "pm25.fTSHIRT_03.s.icon.png"
+  ],
+  "25:VISOR_2026": [
+    "pm25.fVISOR_2026.g2.icon.png",
+    "pm25.fVISOR_2026.g2.s.icon.png",
+    "pm25.fVISOR_2026.icon.png",
+    "pm25.fVISOR_2026.s.icon.png"
   ],
   "25:VS_2019": [
     "pm25.fVS_2019.icon.png",
@@ -3563,9 +3803,17 @@
     "pm52.fGALARIAN.icon.png",
     "pm52.fGALARIAN.s.icon.png"
   ],
+  "52:FGIGANTAMAX": [
+    "pm52.fGIGANTAMAX.icon.png",
+    "pm52.fGIGANTAMAX.s.icon.png"
+  ],
   "52:GALARIAN": [
     "pm52.fGALARIAN.icon.png",
     "pm52.fGALARIAN.s.icon.png"
+  ],
+  "52:GIGANTAMAX": [
+    "pm52.fGIGANTAMAX.icon.png",
+    "pm52.fGIGANTAMAX.s.icon.png"
   ],
   "531:FMEGA": [
     "pm531.fMEGA.icon.png",
@@ -3702,6 +3950,14 @@
   "562:GALARIAN": [
     "pm562.fGALARIAN.icon.png",
     "pm562.fGALARIAN.s.icon.png"
+  ],
+  "569:FGIGANTAMAX": [
+    "pm569.fGIGANTAMAX.icon.png",
+    "pm569.fGIGANTAMAX.s.icon.png"
+  ],
+  "569:GIGANTAMAX": [
+    "pm569.fGIGANTAMAX.icon.png",
+    "pm569.fGIGANTAMAX.s.icon.png"
   ],
   "570:FHISUIAN": [
     "pm570.fHISUIAN.icon.png",
@@ -4439,6 +4695,14 @@
     "pm681.fSHIELD.icon.png",
     "pm681.fSHIELD.s.icon.png"
   ],
+  "687:FMEGA": [
+    "pm687.fMEGA.icon.png",
+    "pm687.fMEGA.s.icon.png"
+  ],
+  "687:MEGA": [
+    "pm687.fMEGA.icon.png",
+    "pm687.fMEGA.s.icon.png"
+  ],
   "68:FGIGANTAMAX": [
     "pm68.fGIGANTAMAX.icon.png",
     "pm68.fGIGANTAMAX.s.icon.png"
@@ -4613,6 +4877,22 @@
     "pm713.fHISUIAN.icon.png",
     "pm713.fHISUIAN.s.icon.png"
   ],
+  "714:CHALLOWEEN_2025": [
+    "pm714.cHALLOWEEN_2025.icon.png",
+    "pm714.cHALLOWEEN_2025.s.icon.png"
+  ],
+  "714:HALLOWEEN_2025": [
+    "pm714.cHALLOWEEN_2025.icon.png",
+    "pm714.cHALLOWEEN_2025.s.icon.png"
+  ],
+  "715:CHALLOWEEN_2025": [
+    "pm715.cHALLOWEEN_2025.icon.png",
+    "pm715.cHALLOWEEN_2025.s.icon.png"
+  ],
+  "715:HALLOWEEN_2025": [
+    "pm715.cHALLOWEEN_2025.icon.png",
+    "pm715.cHALLOWEEN_2025.s.icon.png"
+  ],
   "716:FNEUTRAL": [
     "pm716.fNEUTRAL.icon.png",
     "pm716.fNEUTRAL.s.icon.png"
@@ -4669,6 +4949,14 @@
     "pm719.fMEGA.icon.png",
     "pm719.fMEGA.s.icon.png"
   ],
+  "71:FMEGA": [
+    "pm71.fMEGA.icon.png",
+    "pm71.fMEGA.s.icon.png"
+  ],
+  "71:MEGA": [
+    "pm71.fMEGA.icon.png",
+    "pm71.fMEGA.s.icon.png"
+  ],
   "720:CONFINED": [
     "pm720.fCONFINED.icon.png"
   ],
@@ -4712,6 +5000,22 @@
   "724:HISUIAN": [
     "pm724.fHISUIAN.icon.png",
     "pm724.fHISUIAN.s.icon.png"
+  ],
+  "737:FWINTER_2025": [
+    "pm737.fWINTER_2025.icon.png",
+    "pm737.fWINTER_2025.s.icon.png"
+  ],
+  "737:WINTER_2025": [
+    "pm737.fWINTER_2025.icon.png",
+    "pm737.fWINTER_2025.s.icon.png"
+  ],
+  "738:FWINTER_2025": [
+    "pm738.fWINTER_2025.icon.png",
+    "pm738.fWINTER_2025.s.icon.png"
+  ],
+  "738:WINTER_2025": [
+    "pm738.fWINTER_2025.icon.png",
+    "pm738.fWINTER_2025.s.icon.png"
   ],
   "741:BAILE": [
     "pm741.fBAILE.icon.png",
@@ -4777,6 +5081,22 @@
     "pm745.fMIDNIGHT.icon.png",
     "pm745.fMIDNIGHT.s.icon.png"
   ],
+  "746:FSCHOOL": [
+    "pm746.fSCHOOL.icon.png",
+    "pm746.fSCHOOL.s.icon.png"
+  ],
+  "746:FSOLO": [
+    "pm746.fSOLO.icon.png",
+    "pm746.fSOLO.s.icon.png"
+  ],
+  "746:SCHOOL": [
+    "pm746.fSCHOOL.icon.png",
+    "pm746.fSCHOOL.s.icon.png"
+  ],
+  "746:SOLO": [
+    "pm746.fSOLO.icon.png",
+    "pm746.fSOLO.s.icon.png"
+  ],
   "74:ALOLA": [
     "pm74.fALOLA.icon.png",
     "pm74.fALOLA.s.icon.png"
@@ -4793,6 +5113,14 @@
     "pm75.fALOLA.icon.png",
     "pm75.fALOLA.s.icon.png"
   ],
+  "760:FWILDAREA_2025": [
+    "pm760.fWILDAREA_2025.icon.png",
+    "pm760.fWILDAREA_2025.s.icon.png"
+  ],
+  "760:WILDAREA_2025": [
+    "pm760.fWILDAREA_2025.icon.png",
+    "pm760.fWILDAREA_2025.s.icon.png"
+  ],
   "76:ALOLA": [
     "pm76.fALOLA.icon.png",
     "pm76.fALOLA.s.icon.png"
@@ -4800,6 +5128,22 @@
   "76:FALOLA": [
     "pm76.fALOLA.icon.png",
     "pm76.fALOLA.s.icon.png"
+  ],
+  "778:BUSTED": [
+    "pm778.fBUSTED.icon.png",
+    "pm778.fBUSTED.s.icon.png"
+  ],
+  "778:DISGUISED": [
+    "pm778.fDISGUISED.icon.png",
+    "pm778.fDISGUISED.s.icon.png"
+  ],
+  "778:FBUSTED": [
+    "pm778.fBUSTED.icon.png",
+    "pm778.fBUSTED.s.icon.png"
+  ],
+  "778:FDISGUISED": [
+    "pm778.fDISGUISED.icon.png",
+    "pm778.fDISGUISED.s.icon.png"
   ],
   "77:CSPRING_2023_VALOR": [
     "pm77.cSPRING_2023_VALOR.icon.png",
@@ -5033,6 +5377,14 @@
     "pm855.fPHONY.icon.png",
     "pm855.fPHONY.s.icon.png"
   ],
+  "861:FGIGANTAMAX": [
+    "pm861.fGIGANTAMAX.icon.png",
+    "pm861.fGIGANTAMAX.s.icon.png"
+  ],
+  "861:GIGANTAMAX": [
+    "pm861.fGIGANTAMAX.icon.png",
+    "pm861.fGIGANTAMAX.s.icon.png"
+  ],
   "870:FGOFEST_2025_TRAIN_CONDUCTOR": [
     "pm870.fGOFEST_2025_TRAIN_CONDUCTOR.icon.png",
     "pm870.fGOFEST_2025_TRAIN_CONDUCTOR.s.icon.png"
@@ -5129,6 +5481,22 @@
     "pm890.fETERNAMAX.icon.png",
     "pm890.fETERNAMAX.s.icon.png"
   ],
+  "892:BREAD_DOUGH_MODE": [
+    "pm892.fBREAD_DOUGH_MODE.icon.png",
+    "pm892.fBREAD_DOUGH_MODE.s.icon.png"
+  ],
+  "892:BREAD_DOUGH_MODE_2": [
+    "pm892.fBREAD_DOUGH_MODE_2.icon.png",
+    "pm892.fBREAD_DOUGH_MODE_2.s.icon.png"
+  ],
+  "892:FBREAD_DOUGH_MODE": [
+    "pm892.fBREAD_DOUGH_MODE.icon.png",
+    "pm892.fBREAD_DOUGH_MODE.s.icon.png"
+  ],
+  "892:FBREAD_DOUGH_MODE_2": [
+    "pm892.fBREAD_DOUGH_MODE_2.icon.png",
+    "pm892.fBREAD_DOUGH_MODE_2.s.icon.png"
+  ],
   "892:FRAPID_STRIKE": [
     "pm892.fRAPID_STRIKE.icon.png"
   ],
@@ -5172,6 +5540,14 @@
   "8:SUMMER_2018": [
     "pm8.cSUMMER_2018.icon.png",
     "pm8.cSUMMER_2018.s.icon.png"
+  ],
+  "901:CHALLOWEEN_2025": [
+    "pm901.cHALLOWEEN_2025.icon.png",
+    "pm901.cHALLOWEEN_2025.s.icon.png"
+  ],
+  "901:HALLOWEEN_2025": [
+    "pm901.cHALLOWEEN_2025.icon.png",
+    "pm901.cHALLOWEEN_2025.s.icon.png"
   ],
   "905:FINCARNATE": [
     "pm905.fINCARNATE.icon.png"
@@ -5372,6 +5748,10 @@
     "pm101.s.icon.png",
     "pm1011.icon.png",
     "pm1011.s.icon.png",
+    "pm1012.icon.png",
+    "pm1012.s.icon.png",
+    "pm1013.icon.png",
+    "pm1013.s.icon.png",
     "pm1019.icon.png",
     "pm1019.s.icon.png",
     "pm102.icon.png",
@@ -6775,6 +7155,8 @@
     "pm667.s.icon.png",
     "pm668.icon.png",
     "pm668.s.icon.png",
+    "pm669.icon.png",
+    "pm669.s.icon.png",
     "pm67.icon.png",
     "pm67.s.icon.png",
     "pm672.icon.png",
@@ -6983,6 +7365,8 @@
     "pm77.s.icon.png",
     "pm770.icon.png",
     "pm770.s.icon.png",
+    "pm771.icon.png",
+    "pm771.s.icon.png",
     "pm775.icon.png",
     "pm775.s.icon.png",
     "pm776.icon.png",
@@ -7041,6 +7425,7 @@
     "pm800.icon.png",
     "pm800.s.icon.png",
     "pm802.icon.png",
+    "pm802.s.icon.png",
     "pm803.icon.png",
     "pm803.s.icon.png",
     "pm804.icon.png",
@@ -7049,6 +7434,8 @@
     "pm805.s.icon.png",
     "pm806.icon.png",
     "pm806.s.icon.png",
+    "pm807.icon.png",
+    "pm807.s.icon.png",
     "pm808.icon.png",
     "pm808.s.icon.png",
     "pm809.icon.png",
@@ -7085,6 +7472,12 @@
     "pm822.s.icon.png",
     "pm823.icon.png",
     "pm823.s.icon.png",
+    "pm824.icon.png",
+    "pm824.s.icon.png",
+    "pm825.icon.png",
+    "pm825.s.icon.png",
+    "pm826.icon.png",
+    "pm826.s.icon.png",
     "pm827.icon.png",
     "pm827.s.icon.png",
     "pm828.icon.png",
@@ -7103,6 +7496,12 @@
     "pm835.s.icon.png",
     "pm836.icon.png",
     "pm836.s.icon.png",
+    "pm837.icon.png",
+    "pm837.s.icon.png",
+    "pm838.icon.png",
+    "pm838.s.icon.png",
+    "pm839.icon.png",
+    "pm839.s.icon.png",
     "pm84.g2.icon.png",
     "pm84.g2.s.icon.png",
     "pm84.icon.png",
@@ -7113,6 +7512,10 @@
     "pm841.s.icon.png",
     "pm842.icon.png",
     "pm842.s.icon.png",
+    "pm843.icon.png",
+    "pm843.s.icon.png",
+    "pm844.icon.png",
+    "pm844.s.icon.png",
     "pm848.icon.png",
     "pm848.s.icon.png",
     "pm85.g2.icon.png",
@@ -7123,6 +7526,10 @@
     "pm850.s.icon.png",
     "pm851.icon.png",
     "pm851.s.icon.png",
+    "pm852.icon.png",
+    "pm852.s.icon.png",
+    "pm853.icon.png",
+    "pm853.s.icon.png",
     "pm854.icon.png",
     "pm854.s.icon.png",
     "pm855.icon.png",
@@ -7224,6 +7631,10 @@
     "pm915.s.icon.png",
     "pm916.icon.png",
     "pm916.s.icon.png",
+    "pm917.icon.png",
+    "pm917.s.icon.png",
+    "pm918.icon.png",
+    "pm918.s.icon.png",
     "pm919.icon.png",
     "pm919.s.icon.png",
     "pm92.icon.png",
@@ -7250,6 +7661,12 @@
     "pm93.s.icon.png",
     "pm930.icon.png",
     "pm930.s.icon.png",
+    "pm932.icon.png",
+    "pm932.s.icon.png",
+    "pm933.icon.png",
+    "pm933.s.icon.png",
+    "pm934.icon.png",
+    "pm934.s.icon.png",
     "pm935.icon.png",
     "pm935.s.icon.png",
     "pm936.icon.png",
@@ -7262,6 +7679,10 @@
     "pm939.s.icon.png",
     "pm94.icon.png",
     "pm94.s.icon.png",
+    "pm940.icon.png",
+    "pm940.s.icon.png",
+    "pm941.icon.png",
+    "pm941.s.icon.png",
     "pm944.icon.png",
     "pm944.s.icon.png",
     "pm945.icon.png",
@@ -7272,6 +7693,12 @@
     "pm949.s.icon.png",
     "pm95.icon.png",
     "pm95.s.icon.png",
+    "pm950.icon.png",
+    "pm950.s.icon.png",
+    "pm955.icon.png",
+    "pm955.s.icon.png",
+    "pm956.icon.png",
+    "pm956.s.icon.png",
     "pm957.icon.png",
     "pm957.s.icon.png",
     "pm958.icon.png",
@@ -7290,14 +7717,22 @@
     "pm965.s.icon.png",
     "pm966.icon.png",
     "pm966.s.icon.png",
+    "pm968.icon.png",
+    "pm968.s.icon.png",
+    "pm969.icon.png",
+    "pm969.s.icon.png",
     "pm97.g2.icon.png",
     "pm97.g2.s.icon.png",
     "pm97.icon.png",
     "pm97.s.icon.png",
+    "pm970.icon.png",
+    "pm970.s.icon.png",
     "pm971.icon.png",
     "pm971.s.icon.png",
     "pm972.icon.png",
     "pm972.s.icon.png",
+    "pm973.icon.png",
+    "pm973.s.icon.png",
     "pm974.icon.png",
     "pm974.s.icon.png",
     "pm975.icon.png",
@@ -7310,6 +7745,8 @@
     "pm98.s.icon.png",
     "pm980.icon.png",
     "pm980.s.icon.png",
+    "pm982.icon.png",
+    "pm982.s.icon.png",
     "pm983.icon.png",
     "pm983.s.icon.png",
     "pm99.icon.png",

@@ -631,6 +631,18 @@ class MoveTypeData {
     'ZEN_HEADBUTT_FAST_FAST': 'Psychic',
   };
 
+  static final Map<String, String> _displayNameCache = {};
+
+  /// Get formatted display name for a move (cached)
+  static String displayName(String moveId) {
+    return _displayNameCache.putIfAbsent(moveId, () =>
+      moveId.replaceAll('_FAST', '').replaceAll('_', ' ')
+        .toLowerCase().split(' ')
+        .map((w) => w.isEmpty ? '' : '${w[0].toUpperCase()}${w.substring(1)}')
+        .join(' ')
+    );
+  }
+
   /// Get type for a move, returns null if not found
   static String? getMoveType(String moveName) {
     return moveTypes[moveName];

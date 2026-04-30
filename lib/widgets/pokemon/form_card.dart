@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/ui_constants.dart';
 import '../../models/pokemon_form.dart';
 import '../common/pokemon_icon.dart';
 
@@ -34,12 +33,12 @@ class FormCard extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: isSelected 
-              ? Theme.of(context).colorScheme.primary.withOpacity(0.2) 
-              : Colors.white.withOpacity(0.03),
+              ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2) 
+              : Colors.white.withValues(alpha: 0.03),
           border: Border.all(
             color: isSelected 
                 ? Theme.of(context).colorScheme.primary 
-                : Colors.white.withOpacity(0.1),
+                : Colors.white.withValues(alpha: 0.1),
             width: 2,
           ),
           borderRadius: BorderRadius.circular(16),
@@ -59,7 +58,7 @@ class FormCard extends StatelessWidget {
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                 color: isSelected 
                     ? Theme.of(context).colorScheme.primary 
-                    : Colors.white.withOpacity(0.7),
+                    : Colors.white.withValues(alpha: 0.7),
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

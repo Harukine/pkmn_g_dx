@@ -40,13 +40,15 @@ class MovesSection extends StatelessWidget {
     List<String> moves,
     List<String> eliteMoves,
   ) {
+    final allMoves = {...moves, ...eliteMoves}.toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title.toUpperCase(),
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha: 0.5),
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.1,
               ),
@@ -55,25 +57,27 @@ class MovesSection extends StatelessWidget {
         Wrap(
           spacing: UIConstants.spacingSmall,
           runSpacing: UIConstants.spacingSmall,
-          children: moves.map((move) {
+          children: allMoves.map((move) {
             final isElite = eliteMoves.contains(move);
+            final isReassigned = form.reassignedMoves.contains(move);
+            
             final moveType = MoveTypeData.getMoveType(move);
             final typeColor = moveType != null 
                 ? TypeColors.getColorForType(moveType)
                 : Colors.grey;
             
+            final borderColor = isElite 
+                ? Colors.amber.withValues(alpha: 0.6)
+                : (isReassigned ? Colors.cyan.withValues(alpha: 0.6) : typeColor.withValues(alpha: 0.3));
+            
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: isElite 
-                    ? Colors.amber.withOpacity(0.15)
-                    : typeColor.withOpacity(0.15),
+                color: typeColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: isElite 
-                      ? Colors.amber.withOpacity(0.3)
-                      : typeColor.withOpacity(0.3),
-                  width: 1,
+                  color: borderColor,
+                  width: (isElite || isReassigned) ? 1.5 : 1,
                 ),
               ),
               child: Row(
@@ -82,17 +86,16 @@ class MovesSection extends StatelessWidget {
                   if (isElite) ...[
                     const Icon(Icons.star, size: 10, color: Colors.amber),
                     const SizedBox(width: 4),
+                  ] else if (isReassigned) ...[
+                    const Icon(Icons.auto_awesome, size: 10, color: Colors.cyanAccent),
+                    const SizedBox(width: 4),
                   ],
                   Text(
-                    move.replaceAll('_FAST', '')
-                        .replaceAll('_', ' ')
-                        .toLowerCase().split(' ')
-                        .map((word) => word.isNotEmpty ? '${word[0].toUpperCase()}${word.substring(1)}' : '')
-                        .join(' '),
+                    MoveTypeData.displayName(move),
                     style: TextStyle(
                       fontSize: 12,
-                      color: isElite ? Colors.amber : Colors.white.withOpacity(0.9),
-                      fontWeight: isElite ? FontWeight.bold : FontWeight.w500,
+                      color: Colors.white.withValues(alpha: (isElite || isReassigned) ? 1.0 : 0.9),
+                      fontWeight: (isElite || isReassigned) ? FontWeight.bold : FontWeight.w500,
                     ),
                   ),
                 ],
