@@ -23,8 +23,9 @@ import sys
 SCRIPTS_DIR = Path(__file__).parent
 sys.path.insert(0, str(SCRIPTS_DIR))
 
-# Import the new extraction module
+# Import the extraction and generation modules
 from pokemon_extractor import main as extract_main
+from generate_pokemon_json import main as generate_main
 
 def main():
     """Main entry point."""
@@ -32,7 +33,10 @@ def main():
     print("Building Pokedex Data")
     print("=" * 60)
     print()
+    print("\n[1/2] Generating Mechanical Data (pokemon_data.json)...")
+    generate_main()
     
+    print("\n[2/2] Running Icon-First Extraction (pokemon_go_slim.json)...")
     # Run the icon-first extraction
     extract_main()
     

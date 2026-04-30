@@ -23,42 +23,25 @@ class PokemonListHeader extends StatefulWidget {
   State<PokemonListHeader> createState() => _PokemonListHeaderState();
 }
 
-class _PokemonListHeaderState extends State<PokemonListHeader>
-    with SingleTickerProviderStateMixin {
+class _PokemonListHeaderState extends State<PokemonListHeader> {
   bool _isSearching = false;
   final _searchController = TextEditingController();
-  late final AnimationController _animController;
-  late final Animation<double> _fadeAnim;
-
-  @override
-  void initState() {
-    super.initState();
-    _animController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
-    _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
-  }
 
   @override
   void dispose() {
     _searchController.dispose();
-    _animController.dispose();
     super.dispose();
   }
 
   void _openSearch() {
     setState(() => _isSearching = true);
-    _animController.forward();
   }
 
   void _closeSearch() {
-    _animController.reverse().then((_) {
-      setState(() {
-        _isSearching = false;
-        _searchController.clear();
-        widget.onSearchChanged('');
-      });
+    setState(() {
+      _isSearching = false;
+      _searchController.clear();
+      widget.onSearchChanged('');
     });
   }
 
@@ -72,7 +55,7 @@ class _PokemonListHeaderState extends State<PokemonListHeader>
         color: AppColors.bgDark,
         border: Border(
           bottom: BorderSide(
-            color: Theme.of(context).dividerColor.withOpacity(0.1),
+            color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
             width: 1,
           ),
         ),
@@ -123,7 +106,7 @@ class _PokemonListHeaderState extends State<PokemonListHeader>
             height: 40,
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.08),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(

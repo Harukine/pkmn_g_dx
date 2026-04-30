@@ -8,6 +8,7 @@ class FilterOptions {
   final RangeValues? staminaRange;
   final Set<int> generations;
   final Set<FormType> formTypes;
+  final Set<String> pokemonClasses;
   final String searchQuery;
 
   const FilterOptions({
@@ -17,6 +18,7 @@ class FilterOptions {
     this.staminaRange,
     this.generations = const {},
     this.formTypes = const {},
+    this.pokemonClasses = const {},
     this.searchQuery = '',
   });
 
@@ -27,6 +29,7 @@ class FilterOptions {
     RangeValues? staminaRange,
     Set<int>? generations,
     Set<FormType>? formTypes,
+    Set<String>? pokemonClasses,
     String? searchQuery,
   }) {
     return FilterOptions(
@@ -36,6 +39,7 @@ class FilterOptions {
       staminaRange: staminaRange ?? this.staminaRange,
       generations: generations ?? this.generations,
       formTypes: formTypes ?? this.formTypes,
+      pokemonClasses: pokemonClasses ?? this.pokemonClasses,
       searchQuery: searchQuery ?? this.searchQuery,
     );
   }
@@ -47,5 +51,6 @@ class FilterOptions {
       staminaRange == null &&
       generations.isEmpty &&
       formTypes.isEmpty &&
+      pokemonClasses.isEmpty &&
       searchQuery.isEmpty;
 }

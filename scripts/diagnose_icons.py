@@ -3,7 +3,7 @@ import requests
 from pokemon_extractor import parse_icon_filename
 
 def diagnose():
-    url = "https://github.com/PokeMiners/pogo_assets/tree/master/Images/Pokemon/Addressable%20Assets"
+    url = "https://github.com/PokeMiners/pogo_assets/tree/master/Images/Pokemon%20-%20256x256/Addressable%20Assets"
     print(f"Scraping {url}...")
     
     try:

@@ -25,7 +25,7 @@ class PokemonCard extends StatelessWidget {
         : AppColors.pokedexRed;
 
     return Material(
-      color: typeColor.withOpacity(0.12),
+      color: typeColor.withValues(alpha: 0.12),
       borderRadius: BorderRadius.circular(14),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -79,7 +79,7 @@ class PokemonCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 9,
                             fontWeight: FontWeight.w600,
-                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                             letterSpacing: 0.3,
                           ),
                         ),
@@ -97,7 +97,7 @@ class PokemonCard extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(2),
                   decoration: BoxDecoration(
-                    color: Colors.purple.withOpacity(0.2),
+                    color: Colors.purple.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: const Icon(

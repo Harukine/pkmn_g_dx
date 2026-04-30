@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'core/themes/app_theme.dart';
 import 'screens/list/pokemon_list_page.dart';
 
 void main() {
-  runApp(const PokedexApp());
+  runApp(
+    const ProviderScope(
+      child: PokedexApp(),
+    ),
+  );
 }
 
 class PokedexApp extends StatelessWidget {

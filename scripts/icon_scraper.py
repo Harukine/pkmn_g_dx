@@ -16,7 +16,7 @@ def scrape_pokeminers_icons():
         return None
     
     # Use GitHub API to get the full tree (bypasses 1000 file limit of web view)
-    # We need to find the SHA for "Images/Pokemon/Addressable Assets" or just fetch the whole tree
+    # We need to find the SHA for "Images/Pokemon - 256x256/Addressable Assets" or just fetch the whole tree
     # Fetching the whole tree is easier:
     api_url = "https://api.github.com/repos/PokeMiners/pogo_assets/git/trees/master?recursive=1"
     print(f"Fetching file list from GitHub API: {api_url}...")
@@ -33,7 +33,7 @@ def scrape_pokeminers_icons():
         print("WARNING: GitHub API response was truncated! We might miss files.")
         
     # Filter for icon files in the correct directory
-    target_dir = "Images/Pokemon/Addressable Assets/"
+    target_dir = "Images/Pokemon - 256x256/Addressable Assets/"
     filenames = set()
     
     tree = data.get('tree', [])

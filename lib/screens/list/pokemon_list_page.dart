@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/themes/app_theme.dart';
 import '../../services/pokemon_service.dart';
-import '../../models/pokemon_entry.dart';
 import '../../models/filter_options.dart';
+import '../../providers/pokemon_providers.dart';
 import '../detail/pokemon_detail_page.dart';
 import 'widgets/pokemon_list_tile.dart';
 import 'widgets/pokemon_card.dart';
@@ -13,74 +15,38 @@ import 'widgets/pokemon_list_header.dart';
 enum ViewMode { list, grid }
 
 /// Main list page displaying all Pokemon
-class PokemonListPage extends StatefulWidget {
+class PokemonListPage extends ConsumerStatefulWidget {
   const PokemonListPage({super.key});
 
   @override
-  State<PokemonListPage> createState() => _PokemonListPageState();
+  ConsumerState<PokemonListPage> createState() => _PokemonListPageState();
 }
 
-class _PokemonListPageState extends State<PokemonListPage> {
-  final _pokemonService = PokemonService.instance;
-  List<PokemonEntry> _allPokemon = []; // Store all loaded Pokemon
-  List<PokemonEntry> _displayedPokemon = []; // Store filtered and sorted Pokemon
-  bool _loading = true;
-  SortOption _currentSort = SortOption.idAsc;
+class _PokemonListPageState extends ConsumerState<PokemonListPage> {
   ViewMode _viewMode = ViewMode.list;
-  FilterOptions _currentFilters = const FilterOptions();
+  Timer? _debounceTimer;
 
   @override
-  void initState() {
-    super.initState();
-    _loadPokemon();
+  void dispose() {
+    _debounceTimer?.cancel();
+    super.dispose();
   }
 
-  Future<void> _loadPokemon() async {
-    try {
-      final pokemonList = await _pokemonService.loadPokemon();
-      setState(() {
-        _allPokemon = pokemonList;
-        _applyFiltersAndSort();
-        _loading = false;
-      });
-    } catch (e) {
-      debugPrint('Error loading Pokémon: $e');
-      setState(() {
-        _loading = false;
-      });
-    }
-  }
-
-  void _applyFiltersAndSort() {
-    var filtered = _pokemonService.filterPokemon(_allPokemon, _currentFilters);
-    _displayedPokemon = _pokemonService.sortPokemon(filtered, _currentSort);
-  }
-
-  void _sortList(SortOption newSort) {
-    setState(() {
-      _currentSort = newSort;
-      _applyFiltersAndSort();
-    });
-  }
-
-  void _openFilterDialog() {
+  void _openFilterDialog(FilterOptions currentFilters) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => FilterWidget(
-        currentFilters: _currentFilters,
+        currentFilters: currentFilters,
         onApply: (filters) {
-          setState(() {
-            _currentFilters = filters;
-            _applyFiltersAndSort();
-          });
+          ref.read(filterOptionsProvider.notifier).state = filters;
         },
       ),
     );
   }
 
-  void _showSortMenu() {
+  void _showSortMenu(SortOption currentSort) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
@@ -100,12 +66,12 @@ class _PokemonListPageState extends State<PokemonListPage> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
-                _buildSortItem('ID', SortOption.idAsc, SortOption.idDesc, defaultIsAscending: true),
-                _buildSortItem('Name', SortOption.nameAsc, SortOption.nameDesc, defaultIsAscending: true),
-                _buildSortItem('CP', SortOption.maxCpDesc, SortOption.maxCpAsc, defaultIsAscending: false),
-                _buildSortItem('Attack', SortOption.attackDesc, SortOption.attackAsc, defaultIsAscending: false),
-                _buildSortItem('Defense', SortOption.defenseDesc, SortOption.defenseAsc, defaultIsAscending: false),
-                _buildSortItem('HP', SortOption.staminaDesc, SortOption.staminaAsc, defaultIsAscending: false),
+                _buildSortItem('ID', SortOption.idAsc, SortOption.idDesc, currentSort, defaultIsAscending: true),
+                _buildSortItem('Name', SortOption.nameAsc, SortOption.nameDesc, currentSort, defaultIsAscending: true),
+                _buildSortItem('CP', SortOption.maxCpDesc, SortOption.maxCpAsc, currentSort, defaultIsAscending: false),
+                _buildSortItem('Attack', SortOption.attackDesc, SortOption.attackAsc, currentSort, defaultIsAscending: false),
+                _buildSortItem('Defense', SortOption.defenseDesc, SortOption.defenseAsc, currentSort, defaultIsAscending: false),
+                _buildSortItem('HP', SortOption.staminaDesc, SortOption.staminaAsc, currentSort, defaultIsAscending: false),
               ],
             ),
           ),
@@ -114,12 +80,12 @@ class _PokemonListPageState extends State<PokemonListPage> {
     );
   }
 
-  Widget _buildSortItem(String label, SortOption defaultOption, SortOption alternateOption, {required bool defaultIsAscending}) {
-    final isSelected = _currentSort == defaultOption || _currentSort == alternateOption;
+  Widget _buildSortItem(String label, SortOption defaultOption, SortOption alternateOption, SortOption currentSort, {required bool defaultIsAscending}) {
+    final isSelected = currentSort == defaultOption || currentSort == alternateOption;
     
     IconData? trailingIcon;
     if (isSelected) {
-      bool isCurrentlyAscending = (_currentSort == defaultOption) ? defaultIsAscending : !defaultIsAscending;
+      bool isCurrentlyAscending = (currentSort == defaultOption) ? defaultIsAscending : !defaultIsAscending;
       trailingIcon = isCurrentlyAscending ? Icons.arrow_upward : Icons.arrow_downward;
     }
 
@@ -133,22 +99,34 @@ class _PokemonListPageState extends State<PokemonListPage> {
       ),
       trailing: isSelected ? Icon(trailingIcon, color: AppColors.pokedexRed) : null,
       onTap: () {
-        if (_currentSort == defaultOption) {
-          _sortList(alternateOption);
+        if (currentSort == defaultOption) {
+          ref.read(sortOptionProvider.notifier).state = alternateOption;
         } else {
-          _sortList(defaultOption);
+          ref.read(sortOptionProvider.notifier).state = defaultOption;
         }
         Navigator.pop(context);
       },
     );
   }
 
+  void _onSearchChanged(String query) {
+    if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 300), () {
+      ref.read(searchQueryProvider.notifier).state = query;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (_loading) {
-      return Scaffold(
-        backgroundColor: AppColors.bgDark,
-        body: Center(
+    final dataAsync = ref.watch(pokemonDataProvider);
+    final displayedPokemon = ref.watch(filteredPokemonProvider);
+    final currentFilters = ref.watch(filterOptionsProvider);
+    final currentSort = ref.watch(sortOptionProvider);
+
+    return Scaffold(
+      backgroundColor: AppColors.bgDark,
+      body: dataAsync.when(
+        loading: () => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -161,32 +139,30 @@ class _PokemonListPageState extends State<PokemonListPage> {
             ],
           ),
         ),
-      );
-    }
-
-    return Scaffold(
-      body: Stack(
-        children: [
-          Column(
+        error: (err, stack) => Center(
+          child: Text('Error loading Pokédex: $err', style: const TextStyle(color: Colors.red)),
+        ),
+        data: (_) {
+          final list = displayedPokemon.value ?? [];
+          final screenWidth = MediaQuery.of(context).size.width;
+          final bool showStats = screenWidth > 550;
+          final bool showMoves = screenWidth > 800;
+          
+          return Column(
             children: [
               PokemonListHeader(
-                onFilterPressed: _openFilterDialog,
-                onSortPressed: _showSortMenu,
+                onFilterPressed: () => _openFilterDialog(currentFilters),
+                onSortPressed: () => _showSortMenu(currentSort),
                 onViewModePressed: () {
                   setState(() {
                     _viewMode = _viewMode == ViewMode.list ? ViewMode.grid : ViewMode.list;
                   });
                 },
-                onSearchChanged: (query) {
-                  setState(() {
-                    _currentFilters = _currentFilters.copyWith(searchQuery: query);
-                    _applyFiltersAndSort();
-                  });
-                },
+                onSearchChanged: _onSearchChanged,
                 isGridView: _viewMode == ViewMode.grid,
               ),
               Expanded(
-                child: _displayedPokemon.isEmpty
+                child: list.isEmpty
                     ? Center(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -208,11 +184,21 @@ class _PokemonListPageState extends State<PokemonListPage> {
                     : _viewMode == ViewMode.list
                         ? ListView.builder(
                             padding: const EdgeInsets.only(top: 8, bottom: 24),
-                            itemCount: _displayedPokemon.length,
+                            itemCount: list.length,
+                            prototypeItem: list.isNotEmpty 
+                                ? PokemonListTile(
+                                    entry: list.first, 
+                                    onTap: () {},
+                                    showStats: showStats,
+                                    showMoves: showMoves,
+                                  ) 
+                                : const SizedBox(height: 82),
                             itemBuilder: (context, index) {
-                              final entry = _displayedPokemon[index];
+                              final entry = list[index];
                               return PokemonListTile(
                                 entry: entry,
+                                showStats: showStats,
+                                showMoves: showMoves,
                                 onTap: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
@@ -225,7 +211,6 @@ class _PokemonListPageState extends State<PokemonListPage> {
                           )
                         : Builder(
                             builder: (context) {
-                              final screenWidth = MediaQuery.of(context).size.width;
                               int crossAxisCount;
                               if (screenWidth < 360) {
                                 crossAxisCount = 2;
@@ -242,17 +227,17 @@ class _PokemonListPageState extends State<PokemonListPage> {
                                   left: 8,
                                   right: 8,
                                   top: 8,
-                                  bottom: 24, // Space removed for FAB
+                                  bottom: 24,
                                 ),
                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: crossAxisCount,
-                                  childAspectRatio: 0.75, // Slightly taller to fit content comfortably
+                                  mainAxisExtent: 220,
                                   crossAxisSpacing: 8,
                                   mainAxisSpacing: 8,
                                 ),
-                                itemCount: _displayedPokemon.length,
+                                itemCount: list.length,
                                 itemBuilder: (context, index) {
-                                  final entry = _displayedPokemon[index];
+                                  final entry = list[index];
                                   return PokemonCard(
                                     entry: entry,
                                     onTap: () {
@@ -269,8 +254,8 @@ class _PokemonListPageState extends State<PokemonListPage> {
                           ),
               ),
             ],
-          ),
-        ],
+          );
+        },
       ),
     );
   }

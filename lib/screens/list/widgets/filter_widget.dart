@@ -22,6 +22,7 @@ class _FilterWidgetState extends State<FilterWidget> {
   late Set<String> _selectedTypes;
   late Set<int> _selectedGenerations;
   late Set<FormType> _selectedFormTypes;
+  late Set<String> _selectedClasses;
   late RangeValues _attackRange;
   late RangeValues _defenseRange;
   late RangeValues _staminaRange;
@@ -41,6 +42,7 @@ class _FilterWidgetState extends State<FilterWidget> {
     _selectedTypes = Set.from(widget.currentFilters.types);
     _selectedGenerations = Set.from(widget.currentFilters.generations);
     _selectedFormTypes = Set.from(widget.currentFilters.formTypes);
+    _selectedClasses = Set.from(widget.currentFilters.pokemonClasses);
     _attackRange = widget.currentFilters.attackRange ?? const RangeValues(0, _maxStat);
     _defenseRange = widget.currentFilters.defenseRange ?? const RangeValues(0, _maxStat);
     _staminaRange = widget.currentFilters.staminaRange ?? const RangeValues(0, _maxStat);
@@ -51,6 +53,7 @@ class _FilterWidgetState extends State<FilterWidget> {
       types: _selectedTypes,
       generations: _selectedGenerations,
       formTypes: _selectedFormTypes,
+      pokemonClasses: _selectedClasses,
       attackRange: _attackRange == const RangeValues(0, _maxStat) ? null : _attackRange,
       defenseRange: _defenseRange == const RangeValues(0, _maxStat) ? null : _defenseRange,
       staminaRange: _staminaRange == const RangeValues(0, _maxStat) ? null : _staminaRange,
@@ -63,6 +66,7 @@ class _FilterWidgetState extends State<FilterWidget> {
       _selectedTypes.clear();
       _selectedGenerations.clear();
       _selectedFormTypes.clear();
+      _selectedClasses.clear();
       _attackRange = const RangeValues(0, _maxStat);
       _defenseRange = const RangeValues(0, _maxStat);
       _staminaRange = const RangeValues(0, _maxStat);
@@ -209,6 +213,40 @@ class _FilterWidgetState extends State<FilterWidget> {
                                 _selectedFormTypes.add(type);
                               } else {
                                 _selectedFormTypes.remove(type);
+                              }
+                            });
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildSectionTitle('Pokemon Class'),
+                    Wrap(
+                      spacing: 8,
+                      children: ['Normal', 'Legendary', 'Mythical', 'Ultra Beast'].map((cls) {
+                        final isSelected = _selectedClasses.contains(cls);
+                        Color color;
+                        switch (cls) {
+                          case 'Legendary': color = Colors.amber; break;
+                          case 'Mythical': color = Colors.purpleAccent; break;
+                          case 'Ultra Beast': color = Colors.redAccent; break;
+                          default: color = Colors.blueGrey;
+                        }
+                        return FilterChip(
+                          label: Text(cls),
+                          selected: isSelected,
+                          selectedColor: color.withValues(alpha: 0.8),
+                          checkmarkColor: Colors.white,
+                          labelStyle: TextStyle(
+                            color: isSelected ? Colors.white : color,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          ),
+                          onSelected: (selected) {
+                            setState(() {
+                              if (selected) {
+                                _selectedClasses.add(cls);
+                              } else {
+                                _selectedClasses.remove(cls);
                               }
                             });
                           },

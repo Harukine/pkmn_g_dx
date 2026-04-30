@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/ui_constants.dart';
@@ -12,20 +11,20 @@ import '../../../widgets/common/pokemon_icon.dart';
 class PokemonListTile extends StatelessWidget {
   final PokemonEntry entry;
   final VoidCallback onTap;
+  final bool showStats;
+  final bool showMoves;
 
   const PokemonListTile({
     super.key,
     required this.entry,
     required this.onTap,
+    this.showStats = false,
+    this.showMoves = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final cp = ((entry.baseAttack *
-                sqrt(entry.baseDefense).toInt() *
-                sqrt(entry.baseStamina).toInt()) /
-            10)
-        .toInt();
+    final cp = entry.maxCp;
 
     final primaryType = entry.types.isNotEmpty ? entry.types.first : null;
     final typeColor = primaryType != null
@@ -45,215 +44,160 @@ class PokemonListTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final bool showStats = constraints.maxWidth > 550;
-                final bool showMoves = constraints.maxWidth > 800;
-                final bool showExtended = constraints.maxWidth > 1000;
-                
-                return Row(
-                  children: [
-                    // Pokémon icon with subtle type-tinted background
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: typeColor.withOpacity(0.12),
-                        borderRadius: BorderRadius.circular(10),
+            child: Row(
+              children: [
+                // Pokémon icon with subtle type-tinted background
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: typeColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: PokemonIcon(
+                      goIconUrl: entry.goIconUrl,
+                      size: 50,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                // Name + type chips
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        entry.name,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: Theme.of(context).colorScheme.onSurface,
+                          height: 1.1,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      child: Center(
-                        child: PokemonIcon(
-                          goIconUrl: entry.goIconUrl,
-                          size: 50,
+                      const SizedBox(height: 4),
+                      Wrap(
+                        spacing: 4,
+                        runSpacing: 4,
+                        children: entry.types
+                            .map((t) => _TypeChip(type: t))
+                            .toList(),
+                      ),
+                    ],
+                  ),
+                ),
+                
+
+                
+                if (showStats) ...[
+                  const SizedBox(width: 16),
+                  // Central Stats Section (Vertical Column)
+                  SizedBox(
+                    width: 90,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _MiniStat(label: 'ATK', value: entry.baseAttack, color: Colors.orangeAccent),
+                        _MiniStat(label: 'DEF', value: entry.baseDefense, color: Colors.blueAccent),
+                        _MiniStat(label: 'STA', value: entry.baseStamina, color: Colors.greenAccent),
+                      ],
+                    ),
+                  ),
+                ],
+                
+                if (showMoves) ...[
+                  const SizedBox(width: 24),
+                  // Moves Preview Column
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'MOVE SETS',
+                          style: TextStyle(
+                            fontSize: 8,
+                            fontWeight: FontWeight.w900,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          entry.defaultForm?.quickMoves.join(' • ') ?? 'No data',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                            height: 1.2,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          entry.defaultForm?.cinematicMoves.join(' • ') ?? '',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                            height: 1.2,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+                
+                const SizedBox(width: 12),
+                // Dex # + CP
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (entry.dexNumber != null)
+                      Text(
+                        '#${entry.dexNumber!.toString().padLeft(4, '0')}',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                          letterSpacing: 0.3,
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    // Name + type chips
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    const SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
                         children: [
-                          Text(
-                            entry.name,
+                          TextSpan(
+                            text: 'CP ',
                             style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              color: Theme.of(context).colorScheme.onSurface,
-                              height: 1.1,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
-                            overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 4),
-                          Wrap(
-                            spacing: 4,
-                            runSpacing: 4,
-                            children: entry.types
-                                .map((t) => _TypeChip(type: t))
-                                .toList(),
+                          TextSpan(
+                            text: '$cp',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                              color: Theme.of(context).colorScheme.onSurface,
+                              height: 1.0,
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    
-
-                    
-                    if (showStats) ...[
-                      const SizedBox(width: 16),
-                      // Central Stats Section (Vertical Column)
-                      SizedBox(
-                        width: 90,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _MiniStat(label: 'ATK', value: entry.baseAttack, color: Colors.orangeAccent),
-                            _MiniStat(label: 'DEF', value: entry.baseDefense, color: Colors.blueAccent),
-                            _MiniStat(label: 'STA', value: entry.baseStamina, color: Colors.greenAccent),
-                          ],
-                        ),
-                      ),
-                    ],
-                    
-                    if (showMoves) ...[
-                      const SizedBox(width: 24),
-                      // Moves Preview Column
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'MOVE SETS',
-                              style: TextStyle(
-                                fontSize: 8,
-                                fontWeight: FontWeight.w900,
-                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
-                                letterSpacing: 0.8,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              entry.defaultForm?.quickMoves.join(' • ') ?? 'No data',
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                                height: 1.2,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              entry.defaultForm?.cinematicMoves.join(' • ') ?? '',
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                                height: 1.2,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                    
-                    if (showExtended) ...[
-                      const SizedBox(width: 24),
-                      // Evolution / Candy Column
-                      SizedBox(
-                        width: 80,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'CANDY COST',
-                              style: TextStyle(
-                                fontSize: 8,
-                                fontWeight: FontWeight.w900,
-                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
-                                letterSpacing: 0.8,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            if (entry.defaultForm?.nextEvolutions.isNotEmpty ?? false)
-                              Row(
-                                children: [
-                                  Icon(Icons.circle, size: 8, color: typeColor),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    '${entry.defaultForm!.nextEvolutions.first.candyCost}',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w800,
-                                      color: Theme.of(context).colorScheme.onSurface,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            else
-                              Text(
-                                'MAXED',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w800,
-                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                    
-                    const SizedBox(width: 12),
-                    // Dex # + CP
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (entry.dexNumber != null)
-                          Text(
-                            '#${entry.dexNumber!.toString().padLeft(4, '0')}',
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                              letterSpacing: 0.3,
-                            ),
-                          ),
-                        const SizedBox(height: 4),
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'CP ',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                                ),
-                              ),
-                              TextSpan(
-                                text: '$cp',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  color: Theme.of(context).colorScheme.onSurface,
-                                  height: 1.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
-                );
-              },
+                ),
+              ],
             ),
           ),
         ),
@@ -273,9 +217,9 @@ class _TypeChip extends StatelessWidget {
       margin: const EdgeInsets.only(right: 4),
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.35), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.35), width: 1),
       ),
       child: Text(
         type.toUpperCase(),
@@ -319,7 +263,7 @@ class _MiniStat extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 8,
                   fontWeight: FontWeight.w900,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
                   letterSpacing: 0.8,
                 ),
               ),
@@ -328,7 +272,7 @@ class _MiniStat extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w900,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.9),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.9),
                   fontFamily: 'Courier', // Monospaced for technical feel
                 ),
               ),
@@ -342,26 +286,25 @@ class _MiniStat extends StatelessWidget {
                 width: fullBarWidth,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.06),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(1),
                 ),
               ),
               // Glowing progress bar
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 500),
+              Container(
                 width: barWidth,
                 height: 4,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      color.withOpacity(0.7),
+                      color.withValues(alpha: 0.7),
                       color,
                     ],
                   ),
                   borderRadius: BorderRadius.circular(1),
                   boxShadow: [
                     BoxShadow(
-                      color: color.withOpacity(0.4),
+                      color: color.withValues(alpha: 0.4),
                       blurRadius: 6,
                       spreadRadius: -1,
                     ),

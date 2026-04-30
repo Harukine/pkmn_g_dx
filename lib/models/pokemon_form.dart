@@ -19,9 +19,9 @@ enum FormType {
       case FormType.regional:
         return 'Regional';
       case FormType.mega:
-        return 'Mega Evolution';
+        return 'Mega';
       case FormType.primal:
-        return 'Primal Reversion';
+        return 'Primal';
       case FormType.shadow:
         return 'Shadow';
       case FormType.purified:
@@ -43,6 +43,51 @@ enum FormType {
     } catch (_) {
       return FormType.normal;
     }
+  }
+}
+
+/// Represents a requirement or mechanism for a Pokémon to change forms (e.g. Fusion, Items)
+class FormChange {
+  final List<String> availableForms;
+  final int? candyCost;
+  final int? stardustCost;
+  final String? item;
+  final int? itemCostCount;
+  final List<String> replacementMoves;
+
+  const FormChange({
+    required this.availableForms,
+    this.candyCost,
+    this.stardustCost,
+    this.item,
+    this.itemCostCount,
+    this.replacementMoves = const [],
+  });
+
+  factory FormChange.fromJson(Map<String, dynamic> json) {
+    return FormChange(
+      availableForms: (json['availableForm'] as List<dynamic>? ?? [])
+          .map((e) => e.toString())
+          .toList(),
+      candyCost: JsonUtils.tryParseInt(json['candyCost']),
+      stardustCost: JsonUtils.tryParseInt(json['stardustCost']),
+      item: json['item']?.toString(),
+      itemCostCount: JsonUtils.tryParseInt(json['itemCostCount']),
+      replacementMoves: (json['replacementMoves'] as List<dynamic>? ?? [])
+          .map((e) => e.toString())
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'availableForm': availableForms,
+      'candyCost': candyCost,
+      'stardustCost': stardustCost,
+      'item': item,
+      'itemCostCount': itemCostCount,
+      'replacementMoves': replacementMoves,
+    };
   }
 }
 
@@ -70,6 +115,19 @@ class PokemonForm {
   final List<Evolution> nextEvolutions;
   final int? thirdMoveStardust;
   final int? thirdMoveCandy;
+  final int maxCp;
+
+  // Rich fields
+  final bool isTransferable;
+  final bool isTradable;
+  final int? buddyDistance;
+  final String? dynamaxTier;
+  final String? parentPokemonId;
+  final List<dynamic>? megaForms;
+  final Map<String, dynamic>? shadowData;
+  final List<FormChange> formChanges;
+  final List<String> reassignedMoves;
+  final String? pokemonClass;
 
   // Backward compatibility
   bool get isBattleForm =>
@@ -101,6 +159,17 @@ class PokemonForm {
     this.nextEvolutions = const [],
     this.thirdMoveStardust,
     this.thirdMoveCandy,
+    required this.maxCp,
+    this.isTransferable = true,
+    this.isTradable = true,
+    this.buddyDistance,
+    this.dynamaxTier,
+    this.parentPokemonId,
+    this.megaForms,
+    this.shadowData,
+    this.formChanges = const [],
+    this.reassignedMoves = const [],
+    this.pokemonClass,
   });
 
 
@@ -140,6 +209,27 @@ class PokemonForm {
           .toList(),
       thirdMoveStardust: JsonUtils.tryParseInt(evolutionData['thirdMoveStardust']),
       thirdMoveCandy: JsonUtils.tryParseInt(evolutionData['thirdMoveCandy']),
+      maxCp: json['maxCp'] != null 
+          ? JsonUtils.parseInt(json['maxCp']) 
+          : JsonUtils.calculateMaxCp(
+              JsonUtils.parseInt(json['baseAttack']), 
+              JsonUtils.parseInt(json['baseDefense']), 
+              JsonUtils.parseInt(json['baseStamina'])
+            ),
+      isTransferable: json['isTransferable'] as bool? ?? true,
+      isTradable: json['isTradable'] as bool? ?? true,
+      buddyDistance: JsonUtils.tryParseInt(json['buddyDistance']),
+      dynamaxTier: json['dynamaxTier']?.toString(),
+      parentPokemonId: json['parentPokemonId']?.toString(),
+      megaForms: json['megaForms'] as List<dynamic>?,
+      shadowData: json['shadowData'] as Map<String, dynamic>?,
+      formChanges: (json['formChanges'] as List<dynamic>? ?? [])
+          .map((e) => FormChange.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      reassignedMoves: (json['reassignedMoves'] as List<dynamic>? ?? [])
+          .map((e) => e.toString())
+          .toList(),
+      pokemonClass: json['pokemonClass'] as String?,
     );
   }
 
@@ -167,6 +257,17 @@ class PokemonForm {
         'thirdMoveStardust': thirdMoveStardust,
         'thirdMoveCandy': thirdMoveCandy,
       },
+      'maxCp': maxCp,
+      'isTransferable': isTransferable,
+      'isTradable': isTradable,
+      'buddyDistance': buddyDistance,
+      'dynamaxTier': dynamaxTier,
+      'parentPokemonId': parentPokemonId,
+      'megaForms': megaForms,
+      'shadowData': shadowData,
+      'formChanges': formChanges.map((e) => e.toJson()).toList(),
+      'reassignedMoves': reassignedMoves,
+      'pokemonClass': pokemonClass,
     };
   }
 
@@ -181,8 +282,8 @@ class PokemonForm {
     int? baseStamina,
     int? dexNumber,
     String? goIconUrl,
-    String? shinyGoIconUrl, // Added as per instruction
-    bool? isCostume, // Added as per instruction
+    String? shinyGoIconUrl,
+    bool? isCostume,
     String? familyId,
     List<String>? quickMoves,
     List<String>? cinematicMoves,
@@ -191,6 +292,17 @@ class PokemonForm {
     List<Evolution>? nextEvolutions,
     int? thirdMoveStardust,
     int? thirdMoveCandy,
+    int? maxCp,
+    bool? isTransferable,
+    bool? isTradable,
+    int? buddyDistance,
+    String? dynamaxTier,
+    String? parentPokemonId,
+    List<dynamic>? megaForms,
+    Map<String, dynamic>? shadowData,
+    List<FormChange>? formChanges,
+    List<String>? reassignedMoves,
+    String? pokemonClass,
   }) {
     return PokemonForm(
       pokemonId: pokemonId ?? this.pokemonId,
@@ -213,6 +325,17 @@ class PokemonForm {
       nextEvolutions: nextEvolutions ?? this.nextEvolutions,
       thirdMoveStardust: thirdMoveStardust ?? this.thirdMoveStardust,
       thirdMoveCandy: thirdMoveCandy ?? this.thirdMoveCandy,
+      isTransferable: isTransferable ?? this.isTransferable,
+      isTradable: isTradable ?? this.isTradable,
+      buddyDistance: buddyDistance ?? this.buddyDistance,
+      dynamaxTier: dynamaxTier ?? this.dynamaxTier,
+      parentPokemonId: parentPokemonId ?? this.parentPokemonId,
+      megaForms: megaForms ?? this.megaForms,
+      shadowData: shadowData ?? this.shadowData,
+      formChanges: formChanges ?? this.formChanges,
+      reassignedMoves: reassignedMoves ?? this.reassignedMoves,
+      pokemonClass: pokemonClass ?? this.pokemonClass,
+      maxCp: maxCp ?? this.maxCp,
     );
   }
 }
