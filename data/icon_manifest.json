@@ -2687,9 +2687,17 @@
     "pm2.cJAN_2020_NOEVOLVE.icon.png",
     "pm2.cJAN_2020_NOEVOLVE.s.icon.png"
   ],
+  "2:CSPRING_2020_NOEVOLVE": [
+    "pm2.cSPRING_2020_NOEVOLVE.icon.png",
+    "pm2.cSPRING_2020_NOEVOLVE.s.icon.png"
+  ],
   "2:JAN_2020_NOEVOLVE": [
     "pm2.cJAN_2020_NOEVOLVE.icon.png",
     "pm2.cJAN_2020_NOEVOLVE.s.icon.png"
+  ],
+  "2:SPRING_2020_NOEVOLVE": [
+    "pm2.cSPRING_2020_NOEVOLVE.icon.png",
+    "pm2.cSPRING_2020_NOEVOLVE.s.icon.png"
   ],
   "302:COSTUME_2020": [
     "pm302.fCOSTUME_2020.icon.png",
@@ -3149,6 +3157,12 @@
     "pm3.fCOPY_2019.g2.icon.png",
     "pm3.fCOPY_2019.icon.png"
   ],
+  "3:CSPRING_2020_NOEVOLVE": [
+    "pm3.cSPRING_2020_NOEVOLVE.g2.icon.png",
+    "pm3.cSPRING_2020_NOEVOLVE.g2.s.icon.png",
+    "pm3.cSPRING_2020_NOEVOLVE.icon.png",
+    "pm3.cSPRING_2020_NOEVOLVE.s.icon.png"
+  ],
   "3:FCOPY_2019": [
     "pm3.fCOPY_2019.g2.icon.png",
     "pm3.fCOPY_2019.icon.png"
@@ -3174,6 +3188,12 @@
   "3:MEGA": [
     "pm3.fMEGA.icon.png",
     "pm3.fMEGA.s.icon.png"
+  ],
+  "3:SPRING_2020_NOEVOLVE": [
+    "pm3.cSPRING_2020_NOEVOLVE.g2.icon.png",
+    "pm3.cSPRING_2020_NOEVOLVE.g2.s.icon.png",
+    "pm3.cSPRING_2020_NOEVOLVE.icon.png",
+    "pm3.cSPRING_2020_NOEVOLVE.s.icon.png"
   ],
   "403:CFALL_2020_NOEVOLVE": [
     "pm403.cFALL_2020_NOEVOLVE.g2.icon.png",
@@ -4091,9 +4111,17 @@
     "pm5.cJAN_2020_NOEVOLVE.icon.png",
     "pm5.cJAN_2020_NOEVOLVE.s.icon.png"
   ],
+  "5:CSPRING_2020_NOEVOLVE": [
+    "pm5.cSPRING_2020_NOEVOLVE.icon.png",
+    "pm5.cSPRING_2020_NOEVOLVE.s.icon.png"
+  ],
   "5:JAN_2020_NOEVOLVE": [
     "pm5.cJAN_2020_NOEVOLVE.icon.png",
     "pm5.cJAN_2020_NOEVOLVE.s.icon.png"
+  ],
+  "5:SPRING_2020_NOEVOLVE": [
+    "pm5.cSPRING_2020_NOEVOLVE.icon.png",
+    "pm5.cSPRING_2020_NOEVOLVE.s.icon.png"
   ],
   "613:FWINTER_2020": [
     "pm613.fWINTER_2020.icon.png",
@@ -4718,6 +4746,10 @@
   "6:COPY_2019": [
     "pm6.fCOPY_2019.icon.png"
   ],
+  "6:CSPRING_2020_NOEVOLVE": [
+    "pm6.cSPRING_2020_NOEVOLVE.icon.png",
+    "pm6.cSPRING_2020_NOEVOLVE.s.icon.png"
+  ],
   "6:FCOPY_2019": [
     "pm6.fCOPY_2019.icon.png"
   ],
@@ -4748,6 +4780,10 @@
   "6:MEGA_Y": [
     "pm6.fMEGA_Y.icon.png",
     "pm6.fMEGA_Y.s.icon.png"
+  ],
+  "6:SPRING_2020_NOEVOLVE": [
+    "pm6.cSPRING_2020_NOEVOLVE.icon.png",
+    "pm6.cSPRING_2020_NOEVOLVE.s.icon.png"
   ],
   "700:CHOLIDAY_2022": [
     "pm700.cHOLIDAY_2022.icon.png",
@@ -5389,9 +5425,17 @@
     "pm870.fGOFEST_2025_TRAIN_CONDUCTOR.icon.png",
     "pm870.fGOFEST_2025_TRAIN_CONDUCTOR.s.icon.png"
   ],
+  "870:FMEGA": [
+    "pm870.fMEGA.icon.png",
+    "pm870.fMEGA.s.icon.png"
+  ],
   "870:GOFEST_2025_TRAIN_CONDUCTOR": [
     "pm870.fGOFEST_2025_TRAIN_CONDUCTOR.icon.png",
     "pm870.fGOFEST_2025_TRAIN_CONDUCTOR.s.icon.png"
+  ],
+  "870:MEGA": [
+    "pm870.fMEGA.icon.png",
+    "pm870.fMEGA.s.icon.png"
   ],
   "876:FEMALE": [
     "pm876.fFEMALE.icon.png",
@@ -5529,6 +5573,10 @@
     "pm8.cJAN_2020_NOEVOLVE.icon.png",
     "pm8.cJAN_2020_NOEVOLVE.s.icon.png"
   ],
+  "8:CSPRING_2020_NOEVOLVE": [
+    "pm8.cSPRING_2020_NOEVOLVE.icon.png",
+    "pm8.cSPRING_2020_NOEVOLVE.s.icon.png"
+  ],
   "8:CSUMMER_2018": [
     "pm8.cSUMMER_2018.icon.png",
     "pm8.cSUMMER_2018.s.icon.png"
@@ -5536,6 +5584,10 @@
   "8:JAN_2020_NOEVOLVE": [
     "pm8.cJAN_2020_NOEVOLVE.icon.png",
     "pm8.cJAN_2020_NOEVOLVE.s.icon.png"
+  ],
+  "8:SPRING_2020_NOEVOLVE": [
+    "pm8.cSPRING_2020_NOEVOLVE.icon.png",
+    "pm8.cSPRING_2020_NOEVOLVE.s.icon.png"
   ],
   "8:SUMMER_2018": [
     "pm8.cSUMMER_2018.icon.png",
@@ -5704,6 +5756,10 @@
   "9:COPY_2019": [
     "pm9.fCOPY_2019.icon.png"
   ],
+  "9:CSPRING_2020_NOEVOLVE": [
+    "pm9.cSPRING_2020_NOEVOLVE.icon.png",
+    "pm9.cSPRING_2020_NOEVOLVE.s.icon.png"
+  ],
   "9:CSUMMER_2018": [
     "pm9.cSUMMER_2018.icon.png",
     "pm9.cSUMMER_2018.s.icon.png"
@@ -5730,6 +5786,10 @@
   "9:MEGA": [
     "pm9.fMEGA.icon.png",
     "pm9.fMEGA.s.icon.png"
+  ],
+  "9:SPRING_2020_NOEVOLVE": [
+    "pm9.cSPRING_2020_NOEVOLVE.icon.png",
+    "pm9.cSPRING_2020_NOEVOLVE.s.icon.png"
   ],
   "9:SUMMER_2018": [
     "pm9.cSUMMER_2018.icon.png",
