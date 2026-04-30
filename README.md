@@ -1,57 +1,67 @@
 # Pokédex GO DX
 
-Pokédex GO DX is a lightweight, offline-first Pokédex tailored for **Pokémon GO**.  
-It parses Niantic's `GAME_MASTER` data to surface the most useful species and form
-information in a clean Flutter UI, so you can browse the entire roster anywhere.
+Pokédex GO DX is a high-performance, offline-first Pokédex engineered specifically for **Pokémon GO**. It transforms Niantic's `GAME_MASTER` data into a fluid, responsive Flutter experience with zero runtime API dependency.
 
 ## Highlights
+
 - 📋 Full species coverage with canonical Pokédex order
-- 🔍 Sorting by name or Dex number, with instant navigation to detail pages
-- 🧬 Rich form support (regional, costumed, shadow, mega, primal, etc.)
-- 🎨 Consistent theming with Pokémon GO iconography from PokeMiners assets
-- 📦 Single JSON payload means no runtime API dependency
+- 🔍 Search, filtering by type, and sorting by name or Dex number
+- 🧬 Rich form support — regional, costumed, shadow, mega, primal, Dynamax, and more
+- 🎨 Dark-themed UI with type-reactive color system and Pokémon GO iconography
+- 📦 Single JSON payload — no runtime API calls, works fully offline
+- ⚡ Background isolate processing for 60fps filtering across 1,000+ entries
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Framework** | Flutter 3.x |
+| **State Management** | Riverpod 3.0 (`FutureProvider`, `StateProvider`) |
+| **Image Caching** | `CachedNetworkImage` (unified on all platforms including Web) |
+| **Data Pipeline** | Python 3.11+ |
+
+## Architecture
+
+### Background Filtering
+All search, filter, and sort operations are offloaded to a background isolate via Flutter's `compute()`. The UI thread is never blocked, even when the full 1,000+ Pokémon list is active.
+
+### O(1) Pokémon Lookup
+On load, `PokemonService` builds an in-memory index (`_idIndex`) keyed by all IDs and form aliases. Every lookup is constant-time regardless of roster size.
 
 ## Data Pipeline
-1. Download the latest `GAME_MASTER` payload from the Pokémon GO network dumps.
-2. Run `assets/transform_game_master.py` to normalize the raw protobuf JSON into the
-   simplified structures found under `data/`, merging `formSettings` metadata so costume
-   and regional variants stay aligned with Niantic’s schema.
-3. The Flutter app consumes `data/pokemon_go_slim.json` (referenced via
-   `AppConstants.pokemonDataPath`) to build models such as `PokemonEntry` and
-   `PokemonForm`, relying exclusively on `pogo_assets` icons for imagery.
-4. Icon lookups cache their resolved URLs in `data/icon_cache.json`, so repeat transforms
-   skip redundant HTTP HEAD calls (delete the file to force a full refresh).
 
-> Tip: rerun the transform script whenever Niantic updates move stats, forms, or
-> adds new species so your local Pokédex stays current.
+The dataset is built from Niantic's public `GAME_MASTER` using a two-stage icon-first pipeline:
 
 ## Getting Started
-```bash
-flutter --version        # ensure Flutter is installed
-flutter pub get
-flutter run              # pick ios, android, web, macos, windows, or linux
-```
 
-To regenerate the slim dataset:
 ```bash
-python scripts/download_game_master.py
-python scripts/icon_scraper.py
-python scripts/build_pokedex.py
+flutter pub get
+flutter run          # targets: iOS, Android, Web, macOS, Windows, Linux
 ```
 
 ## Key Modules
-- `lib/services/pokemon_service.dart` – loads/caches the JSON and exposes sorting.
-- `lib/models/` – strongly typed representations of species and form metadata.
-- `lib/screens/list/` – main Pokédex list UI with sorting controls.
-- `lib/screens/detail/` – deep dive into a single species, grouped by form type.
-- `lib/widgets/` – reusable tiles, headers, and form cards.
+
+| Path | Role |
+|---|---|
+| `lib/services/pokemon_service.dart` | Loads & indexes the JSON asset; memoizes evolution chains |
+| `lib/providers/pokemon_providers.dart` | Riverpod providers: data loading, search, filters, sort |
+| `lib/models/` | Strongly-typed `PokemonEntry`, `PokemonForm`, `FilterOptions` |
+| `lib/screens/list/` | Pokédex list view with adaptive layout and search header |
+| `lib/screens/detail/` | Full species detail with stats, moves, evolution chain, and forms |
+| `lib/widgets/` | Reusable `PokemonIcon`, `PokemonListTile`, form cards |
+| `lib/core/constants/` | Type colors, move type mappings, UI constants |
+| `scripts/` | Python data pipeline — download, scrape, extract, build |
 
 ## Roadmap
-- Add search and filtering (type, region, tags, stats thresholds).
-- Show move pools, raid utility, and IV breakpoints.
-- Sync with live GAME_MASTER feeds or crowd-sourced APIs.
-- Add widget/golden tests plus CI to prevent regressions.
+
+- [x] Search and multi-type filtering
+- [x] Background isolate processing
+- [x] Memoized evolution chains
+- [x] Riverpod 3.0 migration
+- [x] Adaptive responsive layouts
+- [ ] Move DPS / damage calculations
+
 
 ---
-Made with Flutter ❤️ for Pokémon GO trainers who want fast reference data without
-hoping their internet connection holds up mid-raid.
+
+Made with Flutter ❤️ for Pokémon GO trainers who want fast, accurate reference data without depending on an internet connection mid-raid.
