@@ -130,12 +130,12 @@ def enrich_form(form_entry: Dict, rich_lookup: Dict[str, Dict]) -> Dict:
         
     if moves and rich.get('id') == pokemon_id and not is_costume:
         form_entry['quickMoves'] = moves.get('fast', [])
-    if enriched_cinematic_moves is not None:
-        form_entry['cinematicMoves'] = enriched_cinematic_moves
-        
-    if moves:
+        form_entry['cinematicMoves'] = enriched_cinematic_moves if enriched_cinematic_moves is not None else moves.get('charge', [])
         form_entry['eliteQuickMoves'] = moves.get('eliteFast', [])
         form_entry['eliteCinematicMoves'] = moves.get('eliteCharge', [])
+    elif enriched_cinematic_moves is not None:
+        # If we have bonus moves but not a full move set from rich data
+        form_entry['cinematicMoves'] = enriched_cinematic_moves
         
     third_move = rich.get('thirdMove')
     if third_move:

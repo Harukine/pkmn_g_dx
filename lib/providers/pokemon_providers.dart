@@ -17,6 +17,23 @@ final pokemonDataProvider = FutureProvider<List<PokemonEntry>>((ref) async {
   return await service.loadPokemon();
 });
 
+/// FutureProvider that loads and parses all Move stats
+final moveStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+  final service = ref.watch(pokemonServiceProvider);
+  return await service.loadMoveStats();
+});
+
+/// FutureProvider that pre-flattens the Pokemon list (Mega, Regional, etc.)
+/// This avoids expensive re-flattening on every filter change.
+final flattenedPokemonProvider = FutureProvider<List<PokemonEntry>>((ref) async {
+  final asyncData = ref.watch(pokemonDataProvider);
+  final allPokemon = asyncData.value ?? [];
+  if (allPokemon.isEmpty) return [];
+  
+  final service = ref.read(pokemonServiceProvider);
+  return await compute(service.flattenPokemonIsolate, allPokemon);
+});
+
 /// StateProvider for the search query
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
@@ -29,8 +46,8 @@ final sortOptionProvider = StateProvider<SortOption>((ref) => SortOption.idAsc);
 /// Computed Provider that watches data, search query, filters, and sorting.
 /// Uses a FutureProvider to offload filtering/sorting to a background isolate.
 final filteredPokemonProvider = FutureProvider<List<PokemonEntry>>((ref) async {
-  // Watch the loaded data
-  final asyncData = ref.watch(pokemonDataProvider);
+  // Watch the flattened data
+  final asyncData = ref.watch(flattenedPokemonProvider);
   
   // If data is not yet loaded or has an error, return empty list
   final allPokemon = asyncData.value ?? [];

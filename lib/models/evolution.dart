@@ -19,7 +19,7 @@ class Evolution {
 
   factory Evolution.fromJson(Map<String, dynamic> json) {
     return Evolution(
-      evolutionId: json['evolution']?.toString() ?? '',
+      evolutionId: JsonUtils.asString(json['evolution']),
       candyCost: JsonUtils.parseInt(json['candyCost']),
       formId: json['form']?.toString(),
       itemRequirement: json['itemRequirement']?.toString(),

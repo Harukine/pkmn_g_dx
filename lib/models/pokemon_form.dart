@@ -1,5 +1,6 @@
 import 'evolution.dart';
 import '../core/utils/json_utils.dart';
+import '../core/constants/move_type_data.dart';
 
 /// Enum representing the type of form
 enum FormType {
@@ -9,6 +10,7 @@ enum FormType {
   primal,
   shadow,
   purified,
+  gigantamax,
   costume,
   special;
 
@@ -26,6 +28,8 @@ enum FormType {
         return 'Shadow';
       case FormType.purified:
         return 'Purified';
+      case FormType.gigantamax:
+        return 'Gigantamax';
       case FormType.costume:
         return 'Costume';
       case FormType.special:
@@ -35,14 +39,10 @@ enum FormType {
 
   static FormType fromString(String? value) {
     if (value == null) return FormType.normal;
-    try {
-      return FormType.values.firstWhere(
-        (e) => e.name.toLowerCase() == value.toLowerCase(),
-        orElse: () => FormType.normal,
-      );
-    } catch (_) {
-      return FormType.normal;
-    }
+    return FormType.values.firstWhere(
+      (e) => e.name.toLowerCase() == value.toLowerCase(),
+      orElse: () => FormType.normal,
+    );
   }
 }
 
@@ -116,6 +116,10 @@ class PokemonForm {
   final int? thirdMoveStardust;
   final int? thirdMoveCandy;
   final int maxCp;
+  final String? bestQuickMove;
+  final String? bestCinematicMove;
+  final String? bestQuickMoveName; // Pre-calculated formatted name
+  final String? bestCinematicMoveName; // Pre-calculated formatted name
 
   // Rich fields
   final bool isTransferable;
@@ -136,7 +140,8 @@ class PokemonForm {
       formType == FormType.regional ||
       formType == FormType.normal ||
       formType == FormType.shadow ||
-      formType == FormType.purified;
+      formType == FormType.purified ||
+      formType == FormType.gigantamax;
 
   const PokemonForm({
     required this.pokemonId,
@@ -160,6 +165,10 @@ class PokemonForm {
     this.thirdMoveStardust,
     this.thirdMoveCandy,
     required this.maxCp,
+    this.bestQuickMove,
+    this.bestCinematicMove,
+    this.bestQuickMoveName,
+    this.bestCinematicMoveName,
     this.isTransferable = true,
     this.isTradable = true,
     this.buddyDistance,
@@ -175,7 +184,6 @@ class PokemonForm {
 
 
   factory PokemonForm.fromJson(Map<String, dynamic> json) {
-    String asString(dynamic v) => v?.toString() ?? '';
     final typesRaw = json['types'] as List<dynamic>? ?? const [];
     
     final quickMovesRaw = json['quickMoves'] as List<dynamic>? ?? const [];
@@ -186,10 +194,13 @@ class PokemonForm {
     final evolutionData = json['evolution'] as Map<String, dynamic>? ?? {};
     final nextEvolutionsRaw = evolutionData['nextEvolutions'] as List<dynamic>? ?? const [];
 
+    final bestQuickMove = json['bestQuickMove']?.toString();
+    final bestCinematicMove = json['bestCinematicMove']?.toString();
+
     return PokemonForm(
-      pokemonId: asString(json['pokemonId']),
+      pokemonId: JsonUtils.asString(json['pokemonId']),
       formId: json['formId']?.toString(),
-      formName: asString(json['formName']),
+      formName: JsonUtils.asString(json['formName']),
       formType: FormType.fromString(json['formType']?.toString()),
       types: typesRaw.map((e) => e.toString()).toList(),
       baseAttack: JsonUtils.parseInt(json['baseAttack']),
@@ -216,6 +227,10 @@ class PokemonForm {
               JsonUtils.parseInt(json['baseDefense']), 
               JsonUtils.parseInt(json['baseStamina'])
             ),
+      bestQuickMove: bestQuickMove,
+      bestCinematicMove: bestCinematicMove,
+      bestQuickMoveName: bestQuickMove != null ? MoveTypeData.displayName(bestQuickMove) : null,
+      bestCinematicMoveName: bestCinematicMove != null ? MoveTypeData.displayName(bestCinematicMove) : null,
       isTransferable: json['isTransferable'] as bool? ?? true,
       isTradable: json['isTradable'] as bool? ?? true,
       buddyDistance: JsonUtils.tryParseInt(json['buddyDistance']),
@@ -258,6 +273,8 @@ class PokemonForm {
         'thirdMoveCandy': thirdMoveCandy,
       },
       'maxCp': maxCp,
+      'bestQuickMove': bestQuickMove,
+      'bestCinematicMove': bestCinematicMove,
       'isTransferable': isTransferable,
       'isTradable': isTradable,
       'buddyDistance': buddyDistance,
@@ -293,6 +310,8 @@ class PokemonForm {
     int? thirdMoveStardust,
     int? thirdMoveCandy,
     int? maxCp,
+    String? bestQuickMove,
+    String? bestCinematicMove,
     bool? isTransferable,
     bool? isTradable,
     int? buddyDistance,
@@ -303,6 +322,8 @@ class PokemonForm {
     List<FormChange>? formChanges,
     List<String>? reassignedMoves,
     String? pokemonClass,
+    String? bestQuickMoveName,
+    String? bestCinematicMoveName,
   }) {
     return PokemonForm(
       pokemonId: pokemonId ?? this.pokemonId,
@@ -325,6 +346,8 @@ class PokemonForm {
       nextEvolutions: nextEvolutions ?? this.nextEvolutions,
       thirdMoveStardust: thirdMoveStardust ?? this.thirdMoveStardust,
       thirdMoveCandy: thirdMoveCandy ?? this.thirdMoveCandy,
+      bestQuickMove: bestQuickMove ?? this.bestQuickMove,
+      bestCinematicMove: bestCinematicMove ?? this.bestCinematicMove,
       isTransferable: isTransferable ?? this.isTransferable,
       isTradable: isTradable ?? this.isTradable,
       buddyDistance: buddyDistance ?? this.buddyDistance,
@@ -336,6 +359,8 @@ class PokemonForm {
       reassignedMoves: reassignedMoves ?? this.reassignedMoves,
       pokemonClass: pokemonClass ?? this.pokemonClass,
       maxCp: maxCp ?? this.maxCp,
+      bestQuickMoveName: bestQuickMoveName ?? this.bestQuickMoveName,
+      bestCinematicMoveName: bestCinematicMoveName ?? this.bestCinematicMoveName,
     );
   }
 }

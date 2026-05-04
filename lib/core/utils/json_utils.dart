@@ -1,6 +1,8 @@
 import 'dart:math';
 
 class JsonUtils {
+  static String asString(dynamic v) => v?.toString() ?? '';
+
   static int parseInt(dynamic value, {int defaultValue = 0}) {
     if (value == null) return defaultValue;
     if (value is num) return value.toInt();

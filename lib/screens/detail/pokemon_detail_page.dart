@@ -39,6 +39,7 @@ class _PokemonDetailPageState extends ConsumerState<PokemonDetailPage> {
     FormType.mega,
     FormType.primal,
     FormType.regional,
+    FormType.gigantamax,
     FormType.shadow,
     FormType.purified,
     FormType.special,
@@ -339,6 +340,8 @@ class _PokemonDetailPageState extends ConsumerState<PokemonDetailPage> {
         return 'Primal';
       case FormType.regional:
         return 'Regional';
+      case FormType.gigantamax:
+        return 'G-Max';
       case FormType.shadow:
         return 'Shadow';
       case FormType.purified:

@@ -643,8 +643,18 @@ class MoveTypeData {
     );
   }
 
-  /// Get type for a move, returns null if not found
-  static String? getMoveType(String moveName) {
-    return moveTypes[moveName];
+  /// Get type for a move, returns null if not found.
+  /// Handles with/without _FAST suffix automatically.
+  static String? getMoveType(String moveId) {
+    if (moveTypes.containsKey(moveId)) {
+      return moveTypes[moveId];
+    }
+    
+    // Try adding/removing _FAST suffix
+    final altId = moveId.endsWith('_FAST') 
+        ? moveId.replaceFirst('_FAST', '') 
+        : '${moveId}_FAST';
+        
+    return moveTypes[altId];
   }
 }

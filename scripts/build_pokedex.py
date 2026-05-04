@@ -36,9 +36,17 @@ def main():
     print("\n[1/2] Generating Mechanical Data (pokemon_data.json)...")
     generate_main()
     
-    print("\n[2/2] Running Icon-First Extraction (pokemon_go_slim.json)...")
+    print("\n[2/4] Extracting Move Stats...")
+    from extractors.move_stats_extractor import extract_move_stats
+    extract_move_stats()
+
+    print("\n[3/4] Running Icon-First Extraction (pokemon_go_slim.json)...")
     # Run the icon-first extraction
     extract_main()
+
+    print("\n[4/4] Enriching with Best Moves...")
+    from enrich_best_moves import enrich_pokedex_with_best_moves
+    enrich_pokedex_with_best_moves()
     
     print()
     print("=" * 60)

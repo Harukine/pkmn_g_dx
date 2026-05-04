@@ -39,6 +39,7 @@ void main() {
           ),
         ],
         maxCp: 1115,
+        searchKey: 'bulbasaur 1',
       ),
       const PokemonEntry(
         basePokemonId: 'CHARMANDER',
@@ -67,6 +68,7 @@ void main() {
           ),
         ],
         maxCp: 980,
+        searchKey: 'charmander 4',
       ),
       const PokemonEntry(
         basePokemonId: 'MEWTWO',
@@ -108,6 +110,7 @@ void main() {
           ),
         ],
         maxCp: 4178,
+        searchKey: 'mewtwo 150',
       ),
     ];
   });
