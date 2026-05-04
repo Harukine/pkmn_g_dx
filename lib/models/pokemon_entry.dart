@@ -15,6 +15,7 @@ class PokemonEntry {
   final String? goIconUrl;
   final List<PokemonForm> forms;
   final int maxCp;
+  final String searchKey; // Pre-calculated lowercase name + dex number for fast filtering
 
   const PokemonEntry({
     required this.basePokemonId,
@@ -29,32 +30,35 @@ class PokemonEntry {
     required this.goIconUrl,
     required this.forms,
     required this.maxCp,
+    required this.searchKey,
   });
 
   factory PokemonEntry.fromJson(Map<String, dynamic> json) {
-    String asString(dynamic v) => v?.toString() ?? '';
     final typesRaw = json['types'] as List<dynamic>? ?? const [];
     final int baseAttack = JsonUtils.parseInt(json['baseAttack']);
     final int baseDefense = JsonUtils.parseInt(json['baseDefense']);
     final int baseStamina = JsonUtils.parseInt(json['baseStamina']);
     final int? maxCp = JsonUtils.tryParseInt(json['maxCp']);
     final formsRaw = json['forms'] as List<dynamic>? ?? const [];
+    final name = JsonUtils.asString(json['name']);
+    final dexNumber = JsonUtils.tryParseInt(json['dexNumber']);
 
     return PokemonEntry(
-      basePokemonId: asString(json['basePokemonId']),
-      name: asString(json['name']),
-      defaultPokemonId: asString(json['defaultPokemonId']),
+      basePokemonId: JsonUtils.asString(json['basePokemonId']),
+      name: name,
+      defaultPokemonId: JsonUtils.asString(json['defaultPokemonId']),
       types: typesRaw.map((e) => e.toString()).toList(),
       baseAttack: baseAttack,
       baseDefense: baseDefense,
       baseStamina: baseStamina,
       hasCostumeForms: json['hasCostumeForms'] as bool? ?? false,
-      dexNumber: JsonUtils.tryParseInt(json['dexNumber']),
+      dexNumber: dexNumber,
       goIconUrl: json['goIconUrl']?.toString(),
       forms: formsRaw
           .map((e) => PokemonForm.fromJson(e as Map<String, dynamic>))
           .toList(),
       maxCp: maxCp ?? JsonUtils.calculateMaxCp(baseAttack, baseDefense, baseStamina),
+      searchKey: '${name.toLowerCase()} ${dexNumber ?? ''}',
     );
   }
 
@@ -72,11 +76,16 @@ class PokemonEntry {
       'goIconUrl': goIconUrl,
       'forms': forms.map((e) => e.toJson()).toList(),
       'maxCp': maxCp,
+      'searchKey': searchKey,
     };
   }
 
   PokemonForm? get defaultForm {
-    return forms.isNotEmpty ? forms.first : null;
+    if (forms.isEmpty) return null;
+    return forms.firstWhere(
+      (f) => f.pokemonId == defaultPokemonId,
+      orElse: () => forms.first,
+    );
   }
 
   int get formCount => forms.length;
@@ -94,6 +103,7 @@ class PokemonEntry {
     String? goIconUrl,
     List<PokemonForm>? forms,
     int? maxCp,
+    String? searchKey,
   }) {
     return PokemonEntry(
       basePokemonId: basePokemonId ?? this.basePokemonId,
@@ -108,6 +118,7 @@ class PokemonEntry {
       goIconUrl: goIconUrl ?? this.goIconUrl,
       forms: forms ?? this.forms,
       maxCp: maxCp ?? this.maxCp,
+      searchKey: searchKey ?? this.searchKey,
     );
   }
 }

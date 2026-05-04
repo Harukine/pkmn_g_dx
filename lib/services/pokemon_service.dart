@@ -105,6 +105,17 @@ class PokemonService {
     }
   }
 
+  /// Load Move stats from JSON asset
+  Future<Map<String, dynamic>> loadMoveStats() async {
+    try {
+      final jsonString = await rootBundle.loadString('data/move_stats.json');
+      return await compute(jsonDecode, jsonString) as Map<String, dynamic>;
+    } catch (e) {
+      debugPrint('Error loading move stats: $e');
+      return {};
+    }
+  }
+
   final Map<String, List<List<EvolutionNode>>> _evolutionChainCache = {};
 
   /// Get the full evolution chain for a Pokemon, including Mega/Primal forms.
@@ -300,9 +311,7 @@ class PokemonService {
       // Filter by Search Query
       if (filters.searchQuery.isNotEmpty) {
         final query = filters.searchQuery.toLowerCase();
-        final nameLower = entry.name.toLowerCase();
-        final dexStr = entry.dexNumber?.toString() ?? '';
-        if (!nameLower.contains(query) && !dexStr.contains(query)) {
+        if (!entry.searchKey.contains(query)) {
           return false;
         }
       }
@@ -435,8 +444,65 @@ class PokemonService {
     final SortOption sortOption = params['sortOption'] as SortOption;
     
     final service = PokemonService();
+    
+    // 1. Filter the list (Already flattened in provider)
     final filtered = service.filterPokemon(list, filters);
+    
+    // 2. Sort the filtered list
     return service.sortPokemon(filtered, sortOption);
+  }
+
+  /// Specialized isolate helper for one-time flattening
+  List<PokemonEntry> flattenPokemonIsolate(List<PokemonEntry> list) {
+    return _flattenPokemon(list);
+  }
+
+  /// Expands a list of Pokemon entries by creating separate entries for Megas and Regional forms.
+  List<PokemonEntry> _flattenPokemon(List<PokemonEntry> list) {
+    final List<PokemonEntry> expanded = [];
+
+    for (final entry in list) {
+      // Add the base/normal form as the primary entry
+      expanded.add(entry);
+
+      // Add Megas and Regional forms as separate entries
+      for (final form in entry.forms) {
+        if (form.formType == FormType.mega || 
+            form.formType == FormType.primal || 
+            form.formType == FormType.regional) {
+          
+          // Determine the formatted name
+          String syntheticName = entry.name;
+          if (form.formType == FormType.mega) {
+            syntheticName = 'Mega ${entry.name}';
+            if (form.formName.contains(' X')) syntheticName += ' X';
+            if (form.formName.contains(' Y')) syntheticName += ' Y';
+          } else if (form.formType == FormType.primal) {
+            syntheticName = 'Primal ${entry.name}';
+          } else if (form.formType == FormType.regional) {
+            // Convert "Alolan Form" to "Alolan Rattata"
+            final region = form.formName.replaceAll(' Form', '').trim();
+            syntheticName = '$region ${entry.name}';
+          }
+
+          expanded.add(entry.copyWith(
+            basePokemonId: form.pokemonId,
+            name: syntheticName,
+            defaultPokemonId: form.pokemonId,
+            types: form.types,
+            baseAttack: form.baseAttack,
+            baseDefense: form.baseDefense,
+            baseStamina: form.baseStamina,
+            maxCp: form.maxCp,
+            goIconUrl: form.goIconUrl,
+            // Keep the forms list but ensure the current form is the first one
+            forms: [form, ...entry.forms.where((f) => f.pokemonId != form.pokemonId)],
+          ));
+        }
+      }
+    }
+
+    return expanded;
   }
 }
 

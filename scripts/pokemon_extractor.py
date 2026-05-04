@@ -269,7 +269,7 @@ def determine_form_type(form_id: Optional[str], prefix: Optional[str]) -> str:
     if 'PRIMAL' in form_upper:
         return "primal"
     if 'GIGANTAMAX' in form_upper:
-        return "mega"  # Treat as mega for now
+        return "gigantamax"
     
     # Regional
     regional_keywords = ['ALOLA', 'GALARIAN', 'HISUIAN', 'PALDEA']
